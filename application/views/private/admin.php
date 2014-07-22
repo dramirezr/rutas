@@ -107,7 +107,7 @@ a:hover
 				($op=="tabletCallAgent") or ($op=="showAgentCust") or ($op=="tabletAdminAgent") )
 			{
 				$url = site_url('').'/'.$url;
-				echo "<iframe id='targetFrame' src='$url' width='100%' height='600px'  frameborder='0' ></iframe>";
+				echo "<iframe id='targetFrame' src='$url' width='100%' height='700px'  frameborder='0' ></iframe>";
 			}else
 				echo $output; 
 
