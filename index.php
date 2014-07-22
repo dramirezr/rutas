@@ -18,8 +18,8 @@
  *
  */
  //define('ENVIRONMENT', 'testing');
-	define('ENVIRONMENT', 'development');
-	date_default_timezone_set('America/Bogota');
+	define('ENVIRONMENT', 'production');
+//	date_default_timezone_set('America/Bogota');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -35,11 +35,13 @@ if (defined('ENVIRONMENT'))
 	{
 		case 'development':
 			error_reporting(E_ALL);
+			date_default_timezone_set('America/Bogota');
 		break;
 	
 		case 'testing':
 		case 'production':
 			error_reporting(0);
+			date_default_timezone_set('America/Guayaquil');
 		break;
 
 		default:
