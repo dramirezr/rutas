@@ -236,6 +236,8 @@ function getBusLocation(){
         });
     }
 
+//     map.setCenter(agentMarker.getPosition());
+
 }
 
 //---------------------------------
