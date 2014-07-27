@@ -26,18 +26,14 @@
 </div>
 <div id="scroller">
 	<div id="cabecera">
-    	<div class="row">
-	  		<br><br><br><br>
+    	<div class="large-8 large-centered columns">
+	  		<h3 class="centered-text"><?=$this->config->item('app_name');?></h3>
 		</div>
 	</div>
 
  <div id="contenido-login">
 	<div class="row">
 	  <div class="large-8 large-centered columns"><p>&nbsp;</p></div>
-	</div>
-	
-	<div class="row">
-	  <div class="large-8 large-centered columns"><h2 class="centered-text"><?=$this->config->item('app_name');?></h2></div>
 	</div>
 
 	<? if ($error): ?>

@@ -132,7 +132,6 @@ class Api extends CI_Controller {
 		$password = $this->input->get_post('password');
 		 
 		$this->load->model('agente');
-		$this->load->model('vehiculos');
 		$this->lang->load('dashboard');
 		
 		if(!$agente = $this->agente->get_for_login($username, $password)){
@@ -144,10 +143,8 @@ class Api extends CI_Controller {
 		$this->agente->update($idagente, array('estado_servicio' => 'LIBRE','estado' => 'P'));
 
 		//Create the session
-		$vehiculo = $this->vehiculos->get_by_id($agente->vehiculo);
 		$agente->clave = NULL;
-		$agente->placa = $vehiculo->placa;
-		
+
 		$this->session->set_userdata('agente', $agente);
 		
 		$session_data = $this->session->all_userdata();
@@ -233,7 +230,9 @@ class Api extends CI_Controller {
 		$data['direccion'] 		= $this->input->get_post('direccion');
 		$data['telefono'] 		= $this->input->get_post('telefono');
 		$data['idruta'] 		= $this->input->get_post('ruta');
-		$data['descripcion'] 	= $this->input->get_post('descripcion');
+		if ($this->input->get_post('orden_parada')>0)
+			$data['orden_parada'] 	= $this->input->get_post('orden_parada');
+        $data['descripcion'] 	= $this->input->get_post('descripcion');
 		$principal			 	= $this->input->get_post('principal');
 		
 		if ($id=='-1'){

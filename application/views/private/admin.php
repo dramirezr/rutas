@@ -34,26 +34,22 @@ a:hover
 	<title><?= $this->config->item('app_name') ?></title>
 </head>
 <body>
-
+<!--
  <div>
-	<img id="background" src="<?=base_url()?>assets/images/fondo.jpg" alt="" title="" />
+	<img id="background" src="<?=base_url()?>assets/images/fondo.jpg" alt="" title="" /> 
   </div>
+ -->
 <div id="scroller">
 	<div id="cabecera">
-    	<div class="row">
-	  		<br><br><br><br>
+    	<div class="large-8 large-centered columns">
+	  		<h3 class="centered-text"><?=$this->config->item('app_name');?></h3>
 		</div>
 	</div>
-	
+ 	
  <div id="contenido">	
 	<div style='height:20px;'>
-	<h4>
-	Hola <?php 
-			echo $this->userconfig->nombre; 
-		?> .!!!
-	</h4>
+		<h4>Hola <?php 	echo $this->userconfig->nombre; ?> .!!!	</h4>
 	</div>  
-
 
 	<div>
 	<?php  

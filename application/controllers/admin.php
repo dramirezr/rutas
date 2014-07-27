@@ -388,12 +388,16 @@ class Admin extends CI_Controller {
 			$crud->set_table('alumno');
 			$crud->set_subject('Alumnos');
 			$crud->columns('codigo','idsucursal','nombre','idparada');
-			$crud->fields('codigo','idsucursal','nombre','idparada');
+			$crud->fields('codigo','idsucursal','nombre','foto1','foto2','idparada');
 			$crud->display_as('idsucursal', 'Institución');
 			$crud->display_as('idparadas', 'Punto de parada');
 			$crud->required_fields('codigo','idsucursal','nombre');
 			//$crud->set_relation('idparadas', 'paradas', 'direccion');
-
+			$crud->set_field_upload('foto1','assets/images/students');
+			$crud->set_field_upload('foto2','assets/images/students');
+			$crud->display_as('foto1', 'Foto uno');
+			$crud->display_as('foto2', 'Foto dos');
+			$crud->display_as('idparada', 'Punto de parada');
 			$state = $crud->getState();
 	    	$state_info = $crud->getStateInfo();
 	 		$primary_key='-1';

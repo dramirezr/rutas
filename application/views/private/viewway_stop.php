@@ -78,6 +78,8 @@
             <input name="descripcion" id="descripcion" placeholder="" value="" type="text">
             <label for="telefono">Teléfono:</label>
             <input name="telefono" id="telefono" placeholder="" value="" type="text">
+            <label for="orden_parada">Orden de parada:</label>
+            <input name="orden_parada" id="orden_parada" placeholder="" value="" type="text">
             <label for="select-rutas">Ruta:</label>
             <span id="select-rutas"></span>
             

@@ -127,6 +127,7 @@ function saveStop(){
                 direccion   : $('input[name="direccion"]').val(),
                 telefono    : $('input[name="telefono"]').val(),
                 ruta        : $('#select-allrutas').val(),
+                orden_parada: $('input[name="orden_parada"]').val(),
                 descripcion : $('input[name="descripcion"]').val(),
                 principal   : $('input[name="chk-principal"]').prop("checked")
             }
@@ -328,10 +329,6 @@ function getIconLocationWay(){
 }
 
 
-
-
-
-
 function setIcons(coordenadas, result){
     //if (result.idalumno!="-1"){
         var popup;
@@ -367,6 +364,7 @@ function setIcons(coordenadas, result){
             $('#direccion').val(result.direccion);
             $('#select-allrutas').val(result.idruta);
             $('#descripcion').val(result.descripcion);
+            $('#orden_parada').val(result.orden_parada);
             
             $("input[name='chk-principal']").checkboxradio();
             if(result.codparada==result.idparada)
@@ -457,11 +455,11 @@ function cargarMapa() {
 
     map = new google.maps.Map($("#map_canvas").get(0), myOptions); /*Creamos el mapa y lo situamos en su capa */
 
-    google.maps.event.addListener(map, 'click', function(event)
+/*    google.maps.event.addListener(map, 'click', function(event)
     {
         addMarker(event.latLng);
     });
-
+*/
 }
 
 

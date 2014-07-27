@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Taxi Fácil</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+
+<link rel="stylesheet" href="assets/css/jquery.mobile-1.3.2.min.css" />
+<link rel="stylesheet" href="assets/css/app.css" /> 
+<script src="assets/js/jquery-1.10.2.min.js"></script>
+<script src="assets/js/jquery.mobile-1.3.2.min.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> 
+<script src="assets/js/komira.js"></script>
+
+
+</head>
+<body>
+<div data-role="popup" id="popupBasic"></div>
+
+<!-- Login -->
+<div data-role="page" id="login-page">
+    <div data-theme="b" data-role="header">
+        <h3>
+            Buskoo Rutas
+        </h3>
+    </div>
+    <div data-role="content">
+    
+        <div style=" text-align:center">
+           <img style="width: 96px; height: 96px" src="assets/images/logo-ruta.png">
+        </div>
+        
+        <form id="login-form" action="" method="POST">
+            <div data-role="fieldcontain">
+                <label for="username">
+                    Codigo
+                </label>
+                <input name="username" id="username" placeholder="" value="" type="text">
+            </div>
+            <div data-role="fieldcontain">
+                <label for="password">
+                    Clave
+                </label>
+                <input name="password" id="password" placeholder="" value="" type="password">
+            </div>
+            <a href="#dashboard" data-role="button" id="show-dashboard" style="display: none;">Show page "two"</a>
+            <input type="button" data-theme="b" data-icon="arrow-r" data-iconpos="right"
+            value="Ingresar" id="do-login">
+        </form>
+    </div>
+    <div data-theme="b" data-role="footer" data-position="fixed">
+        <h3>
+			© 2014 Good People Technologies
+        </h3>
+    </div>
+</div>
+<!-- EndLogin -->
+
+
+<!-- Home -->
+<div data-role="page" id="dashboard">
+    <div data-theme="b" data-role="header">
+         <table border=0 width="100%"><tbody>
+        <tr>
+            <td align="center" width="20%">
+               <img id="agent-photo" style="width: 50px; height: 50px" src="" >
+            </td>
+            <td align="left" width="40%">
+                <p id="agent-name"></p>
+            </td>
+            <td  align="right" width="20%">
+                <a data-role="button" data-theme="a" href="#maps-modal" data-rel="dialog" data-transition="pop" id="btn-vermapa">Ver mapa</a>
+            </td>
+        </tr>
+        </tbody></table>
+    </div>
+    
+ <div data-role=="nav"> 
+        <div data-role="fieldcontain">
+         <input name="current-position" id="current-position" placeholder="" value="" type="text" readonly> 
+        </div>
+    </div>
+
+    <div data-role="article">
+
+		<form>
+		    <fieldset data-role="collapsible" data-theme="e" data-content-theme="d">
+		        <legend>Maria Jose Sabogal</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+			<fieldset data-role="collapsible" data-theme="e" data-content-theme="d">
+		        <legend>Juan Diego Ramirez Garcia</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/2n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/2f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/2p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/2m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+<fieldset data-role="collapsible" data-theme="a" data-content-theme="d">
+		        <legend>Manuela Rojas Benitez</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+		    <fieldset data-role="collapsible" data-theme="a" data-content-theme="d">
+		        <legend>Hugo Alejandro Lucio Perez</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+		    <fieldset data-role="collapsible" data-theme="a" data-content-theme="d">
+		        <legend>Pablo Cesar Herrera Claro</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+		    <fieldset data-role="collapsible" data-theme="a" data-content-theme="d">
+		        <legend>Nicolas Salamanca Escobar</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+		    <fieldset data-role="collapsible" data-theme="a" data-content-theme="d">
+		        <legend>Esteban Romero Castro</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+		    <fieldset data-role="collapsible" data-theme="a" data-content-theme="d">
+		        <legend>Viviana Andrea Lerma Osorio</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+		    <fieldset data-role="collapsible" data-theme="a" data-content-theme="d">
+		        <legend>Jose David Rojas Salgado</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+		    <fieldset data-role="collapsible" data-theme="a" data-content-theme="d">
+		        <legend>Sergio Alejandro Rivera Cardona</legend>
+		        <label for="textinput-f">Av.10 de Agosto 8142. Teléfono: (593) (2) 2418118 </label>
+		        <input name="textinput-f" id="textinput-f" placeholder="Text input" value="" type="text">
+		        <img id="photo-boy" alt="Juan Diego Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1n.jpg" >
+		        <img id="photo-family" alt="Familia Ramirez Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1f.jpg" >
+		        <img id="photo-fader" alt="Diego Ramirez" style="width: 50px; height: 50px" src="assets/images/estudiantes/1p.jpg" >
+		        <img id="photo-fader" alt="Sandra Paola Garcia" style="width: 50px; height: 50px" src="assets/images/estudiantes/1m.jpg" >
+
+
+		        <div data-role="controlgroup">
+		            <input name="checkbox-1-a" id="checkbox-1-a" type="checkbox">
+		            <label for="checkbox-1-a">En camino al colegio</label>
+		            <input name="checkbox-2-a" id="checkbox-2-a" type="checkbox">
+		            <label for="checkbox-2-a">En el colegio</label>
+		            <input name="checkbox-3-a" id="checkbox-3-a" type="checkbox">
+		            <label for="checkbox-3-a">De regreso a casa</label>
+		            <input name="checkbox-4-a" id="checkbox-4-a" type="checkbox">
+		            <label for="checkbox-4-a">Entregado en casa</label>
+		        </div>
+		    </fieldset>
+
+
+		</form>
+    </div>
+
+   
+    <div data-theme="b" data-role="footer" data-position="fixed">
+        <h3>
+           © 2013 Good People Technologies
+        </h3>
+    </div>
+</div>
+<!-- Home -->
+
+<!-- Start of third page: #popup -->
+<div data-role="page" id="maps-modal" data-close-btn="none">
+    
+        <div data-role="header" data-theme="b">
+            <a href="#" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-regresar">Regresar</a>
+            <h1>Mapa del servicio</h1>
+        </div><!-- /header -->
+        <div data-role="content" id="map_content" data-theme="a">
+            <div id="map_content">
+                <div id="map_canvas"></div>
+            </div>
+        </div>
+   
+</div><!-- /page popup -->
+
+
+</body>
+</html>

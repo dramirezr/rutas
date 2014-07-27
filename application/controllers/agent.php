@@ -208,7 +208,37 @@ function verify_service_status(){
 		die(json_encode(array('state' => 1,  'arribo' =>$inquiry->id)));
 	}
 
+
+
+//--------------new code
+
+	function get_stop_location_way(){
+		$this->load->model('paradas');
+		$idruta = $this->agent->idruta;
+		$paradas = $this->paradas->get_way_stop($idruta,'','','');
+		die(json_encode(array('state' => 'ok','idruta' =>$idruta,'result' => $paradas)));
+	}	
+
+	
+	function update_state_student(){
+		
+		$id = $this->input->get_post('student');
+		$estado = $this->input->get_post('state');
+		$this->load->model('alumno');
+		$update = $this->alumno->update($id, array('estado' => $estado));
+		if ($update==1)
+			die(json_encode(array('state' => 'ok')));
+		else
+			die(json_encode(array('state' => '')));
+	}
+
+	function close(){
+		$this->session->unset_userdata('agente');
+		$this->session->sess_destroy();
+		
+		redirect('/agent/'); 
+	}
+
+
 } 
  
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

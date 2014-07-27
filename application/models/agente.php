@@ -52,8 +52,15 @@ class Agente extends CI_Model {
 	function get_for_login($code, $pass){
 		
 		$pass = md5($pass);
+		//$agente = $this->db->get_where('agente', array('codigo' => $code, 'clave' => $pass))->result();
+		$sql  = " SELECT a.*,v.placa,u.id as idruta, u.nombre as nombreruta ";
+		$sql .= " FROM agente a  ";
+		$sql .= " inner join vehiculos v on(a.vehiculo=v.id) ";
+		$sql .= " inner join usuarios u on(v.propietario=u.id) ";
+		$sql .= " where a.codigo='$code' and a.clave='$pass' ";
 		
-		$agente = $this->db->get_where('agente', array('codigo' => $code, 'clave' => $pass))->result();
+		$agente = $this->db->query($sql)->result();
+		
 		if(!count($agente))
 			return null;
 		return $agente[0];		
