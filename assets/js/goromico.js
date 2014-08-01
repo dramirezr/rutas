@@ -25,6 +25,9 @@ var longitud;
 var geocoder = new google.maps.Geocoder();
 var markersArray = [];
 var limits = new google.maps.LatLngBounds();
+var agentMarker;
+var LocationDemonId=null;
+
 
 
 
@@ -45,7 +48,6 @@ $(document).ready(function() {
         selectAlumnos();
     }
     if (form_view=='view_way_stop'){
-        
         selectRutas_p();
     }
   
@@ -288,44 +290,105 @@ function getIconLocation(){
         if(response.state == 'ok'){
             var coordenadas;
             deleteOverlays();
-           for(var i in response.result){
+            map.setCenter(new google.maps.LatLng( 0, 0 ));
+            var bounds = new google.maps.LatLngBounds();
+            for(var i in response.result){
                 coordenadas =  new google.maps.LatLng( response.result[i].latitud, response.result[i].longitud);
                 setIcons(coordenadas, response.result[i]);
-                // limits.extend(coordenadas);
+               
+                bounds.extend(coordenadas);
             }
-            
+            map.setCenter(bounds.getCenter());
+
         }
     });
   
 }
 
 
+var flag='';
 function getIconLocationWay(){
-  var elemento = $('#select-allrutas-p').val();  
+    var idruta = $('#select-allrutas-p').val();  
+    clearInterval(LocationDemonId);
+    if(idruta>0){
+        LocationDemonId = setInterval(getIconLocationWay, 15000);
+    
+        $.ajax({
+            type : "GET",
+            url : lang + '../../../api/get_stop_location_way',        
+            dataType : "json",
+            data : {
+                cachehora : (new Date()).getTime(),
+                idruta  : idruta
+            }
+        }).done(function(response){
+
+            if(response.state == 'ok'){
+                var coordenadas;
+                deleteOverlays();
+                var bounds = new google.maps.LatLngBounds();
+                for(var i in response.result){
+                    coordenadas =  new google.maps.LatLng( response.result[i].latitud, response.result[i].longitud);
+                    setIcons(coordenadas, response.result[i]);
+                    bounds.extend(coordenadas);
+                }
+                getBusLocation(idruta,bounds);
+
+                
+            }
+        });
+    }else
+        deleteOverlays();
+}
+
+
+function getBusLocation(idruta,bounds){
     $.ajax({
         type : "GET",
-        url : lang + '../../../api/get_stop_location_way',        
+        url : lang + '../../../api/select_vehicle',        
         dataType : "json",
         data : {
             cachehora : (new Date()).getTime(),
-            idruta  : elemento
+            idruta  : idruta
         }
-        
         
     }).done(function(response){
 
         if(response.state == 'ok'){
             var coordenadas;
-            deleteOverlays();
-           for(var i in response.result){
+            for(var i in response.result){
                 coordenadas =  new google.maps.LatLng( response.result[i].latitud, response.result[i].longitud);
-                setIcons(coordenadas, response.result[i]);
-                // limits.extend(coordenadas);
+                setIconsBus(coordenadas, response.result[i]);
+                bounds.extend(coordenadas);
             }
-            
+
+            if (flag!=idruta){
+                map.setCenter(bounds.getCenter());   
+                map.fitBounds(bounds);
+            }
+            flag=idruta;
         }
     });
-  
+}
+
+
+function setIconsBus(coordenadas, result){
+    var icon_bus;
+    if(result.fecha_localizacion>result.datesytem)
+        icon_bus =  '/assets/images/bus.png';
+    else
+        icon_bus =  '/assets/images/bus2.png';
+
+    iconMarker = new google.maps.Marker({
+        position:coordenadas,
+        map: map,
+        //animation: google.maps.Animation.DROP, 
+        draggable: true,
+        icon : icon_bus,
+        title : 'Placa: '+result.placa+' - Ult. Fecha act.: ' +result.fecha_localizacion 
+    });
+    markersArray.push(iconMarker);
+               
 }
 
 
@@ -333,18 +396,27 @@ function setIcons(coordenadas, result){
     //if (result.idalumno!="-1"){
         var popup;
         var icon_casa
+        if (form_view=='view_estudent_stop'){
+            if(result.codparada==result.idparada)
+                icon_casa =  '/assets/images/casa.png';
+            else
+                icon_casa =  '/assets/images/casa2.png';
+        }else{
+            if (form_view=='view_way_stop'){
+                if(result.estado==1)
+                    icon_casa =  '/assets/images/casa2.png';
+                else
+                    icon_casa =  '/assets/images/casa.png';
+            }
+        }
         
-        if(result.codparada==result.idparada)
-            icon_casa =  '/assets/images/casa.png';
-        else
-            icon_casa =  '/assets/images/casa2.png';
         iconMarker = new google.maps.Marker({
             position:coordenadas,
             map: map,
-            animation: google.maps.Animation.DROP, 
+            //animation: google.maps.Animation.DROP, 
             draggable: true,
             icon : icon_casa,
-            title : result.idalumno+':'+result.idparada+':'+result.direccion
+            title : result.nombre+' - '+result.direccion +' - '+result.telefono+' - '+result.descripcion
         });
         markersArray.push(iconMarker);
                 

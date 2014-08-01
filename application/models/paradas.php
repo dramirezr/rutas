@@ -53,7 +53,7 @@ class Paradas extends CI_Model {
 	function get_way_stop($idruta, $id,$perfil,$idsucursal){
 		$sql  = " select a.id as idalumno,a.codigo,a.nombre, a.idparada as codparada,";
 		$sql .= " b.id as idparada,b.direccion,b.telefono,b.descripcion, b.latitud, b.longitud, b.idruta, b.orden_parada, ";
-		$sql .= " a.foto1,a.foto2,a.estado ";
+		$sql .= " a.foto1,a.foto2,a.estado,a.idnovedad ";
 		$sql .= " FROM paradas b ";
  		$sql .= " INNER JOIN alumno a ON (b.idruta =$idruta and b.id = a.idparada )  ";
  		

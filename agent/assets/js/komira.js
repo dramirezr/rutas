@@ -1,3 +1,6 @@
+//foto del streeview
+//http://maps.googleapis.com/maps/api/streetview?size=400x400&location=3.42056,-76.5222&sensor=true
+
 var http = location.protocol;
 var slashes = http.concat("//");
 
@@ -8,6 +11,7 @@ var lat = lng = deslat = destlng = 0;
 var scode = null;
 var user = null;
 var localizationDemonId;
+var busLocationDemonId;
 var updateLocationDemonId;
 var verification_interval = null;
 var updatelocation_interval = null;
@@ -45,9 +49,9 @@ var styles = [
                     ];
     
 var map;
-var busLocationDemonId;
 var markersArray = [];
 var agentMarker;
+var novedadesArray = [];
 //var latitud;
 //var longitud;
 //var geocoder = new google.maps.Geocoder();
@@ -56,11 +60,13 @@ var agentMarker;
 $(document).ready(function() {
     
    // $.mobile.loading( "show" );
-    
     init();
 
+    
+    
     $('#do-login').click(function(e){
 		e.preventDefault();
+        getArrayNovedades();
         username = $('#username').val();
         password = $('#password').val();
         login(username, password);
@@ -72,22 +78,58 @@ $(document).ready(function() {
     });
 
 
-    $('#btn-map-back').click(function (e){
-            
-        $.mobile.loading("hide");
+    $('#btn-maps-modal').click(function(e){
+        e.preventDefault();
         clearInterval(busLocationDemonId);
-        //borrar los marker    
-        deleteOverlays();        
-        if(agentMarker){
-            agentMarker.setMap(null);
-            agentMarker = null;
-        }
-                
+        busLocationDemonId = setInterval(getBusLocation, 5000);
+        getBusLocation();
+        getStudentStop();
+        $.mobile.changePage('#maps-modal', { transition: "pop", role: "dialog", reverse: false } );
+    });
+
+   $('#btn-stop-back').click(function(e){
+        e.preventDefault();
+        getStudentStop();
+        $("#det-parada-modal").dialog('close');
     });
 
 
+    $('#btn-map-back').click(function (e){
+        clearInterval(busLocationDemonId);
+        deleteOverlays();   
+        deleteOverlaysBus();   
+    });
+
+
+
+    $('#btn-close').click(function(e){
+        e.preventDefault();
+
+        clearInterval(busLocationDemonId);
+        clearInterval(localizationDemonId);
+        clearInterval(verifyServiceDemonId);
+        clearInterval(updateLocationDemonId);    
+        password = '';
+        $("#show-login").trigger('click');
+    });
+    
 });
 
+function validarEnter(e) {
+    if (window.event) {
+        keyval=e.keyCode
+    } else 
+        if (e.which) {
+            keyval=e.which
+        } 
+    if (keyval=="13") {
+        e.preventDefault();
+        getArrayNovedades();
+        username = $('#username').val();
+        password = $('#password').val();
+        login(username, password);
+    } 
+}
 
 $( document ).bind( "pageshow", function( event, data ){
 google.maps.event.trigger(map_canvas, 'resize');
@@ -98,7 +140,7 @@ $(document).on('pagebeforeshow', '#maps-modal', function(){
     $('#map_canvas').css('height', '500px');
     //console.log('cargando mapa');
     cargarMapa();
-
+    
  });
 
 
@@ -144,7 +186,7 @@ function login(id, key){
 			updateLocation();
 			localizationDemonId = setInterval(localizame, verification_interval);
             updateLocationDemonId = setInterval(updateLocation, verification_interval);
-
+            
         }else{
             alert(response.msg);
         }
@@ -189,7 +231,7 @@ function updateLocation(){
 
 function localizame() {
     if (navigator.geolocation) { 
-		
+		//navigator.geolocation.getCurrentPosition(coords, errores);
         navigator.geolocation.getCurrentPosition(coords, errores,{'enableHighAccuracy':true,'timeout':20000,'maximumAge':0});
     }else{
         $('#current-position').val('No hay soporte para la geolocalización.');
@@ -216,28 +258,18 @@ function cargarMapa() {
     };/* HYBRID  Configuramos una serie de opciones como el zoom del mapa y el tipo.*/
     map = new google.maps.Map($("#map_canvas").get(0), myOptions); /*Creamos el mapa y lo situamos en su capa */
 
-    clearInterval(busLocationDemonId);
-    busLocationDemonId = setInterval(getBusLocation, 5000);
-    getBusLocation();
-    getStudentStop();
 }
 
 
 function getBusLocation(){
-    console.log('getBusLocation');
-    if(agentMarker){
-        agentMarker.setPosition( new google.maps.LatLng( lat, lng ) );
-    }else{
-        agentMarker = new google.maps.Marker({
+    console.log('...getBusLocation');
+    deleteOverlaysBus() ;
+    agentMarker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
             map: map,
             draggable: true,
             icon : 'assets/images/bus.png'
         });
-    }
-
-//     map.setCenter(agentMarker.getPosition());
-
 }
 
 //---------------------------------
@@ -269,6 +301,16 @@ function deleteOverlays() {
   }
 }
 
+function deleteOverlaysBus() {
+    if(agentMarker){
+        agentMarker.setMap(null);
+        agentMarker = null;
+    }
+}
+//if(agentMarker){
+         //   agentMarker.setMap(null);
+         //   agentMarker = null;
+        //}
 function getStudentStop(){
     $.ajax({
         type : "GET",
@@ -282,10 +324,8 @@ function getStudentStop(){
             var coordenadas;
             deleteOverlays();
            for(var i in response.result){
-                console.log('lat:'+response.result[i].latitud);
                 coordenadas =  new google.maps.LatLng( response.result[i].latitud, response.result[i].longitud);
                 setIcons(coordenadas, response.result[i]);
-                // limits.extend(coordenadas);
             }
             
         }
@@ -296,8 +336,10 @@ function getStudentStop(){
 function setIcons(coordenadas, result){
     var popup;
     var icon_casa
-        
-    icon_casa =  'assets/images/casa.png';
+    if(result.estado==1)
+        icon_casa =  'assets/images/casa2.png';
+    else
+        icon_casa =  'assets/images/casa.png';
           
     iconMarker = new google.maps.Marker({
             position:coordenadas,
@@ -305,7 +347,7 @@ function setIcons(coordenadas, result){
             animation: google.maps.Animation.DROP, 
             draggable: false,
             icon : icon_casa,
-            title : result.idalumno+':'+result.idparada+':'+result.direccion
+            title : result.nombre+' - '+result.direccion+' - '+result.telefono
     });
     markersArray.push(iconMarker);
 
@@ -323,8 +365,14 @@ function setIcons(coordenadas, result){
             
             $('#direccion').val(result.direccion);
             $('#descripcion').val(result.descripcion);
-            $('#foto1').attr('src', "../assets/images/students/" + result.foto1) ;
-            $('#foto2').attr('src', "../assets/images/students/" + result.foto2) ;
+            if(result.foto1!=null)
+                $('#foto1').attr('src', "../assets/images/students/" + result.foto1) ;
+            else
+                $('#foto1').attr('src', "" ) ;
+            if(result.foto2!=null)    
+                $('#foto2').attr('src', "../assets/images/students/" + result.foto2) ;
+            else
+                $('#foto2').attr('src', "" + result.foto1) ;
             
             $.mobile.changePage('#det-parada-modal', { transition: "pop", role: "dialog", reverse: false } );
     });    
@@ -416,9 +464,10 @@ function PaintWayStop(data){
         else
             html  = '<fieldset name="fieldset-'+data.idalumno+'" id="fieldset-'+data.idalumno+'" data-role="collapsible" data-theme="a" data-content-theme="d">';
     html += '   <legend>'+data.nombre+'</legend>';
-   
-    html += '   <img id="photo-boy1" alt="" style="width: 50px; height: 50px" src="../assets/images/students/'+data.foto1+'" >';
-    html += '   <img id="photo-boy2" alt="" style="width: 50px; height: 50px" src="../assets/images/students/'+data.foto2+'" >';
+    if (data.foto1!=null)
+        html += '   <img id="photo-boy1" alt="" style="width: 50px; height: 50px" src="../assets/images/students/'+data.foto1+'" >';
+    if (data.foto2!=null)
+        html += '   <img id="photo-boy2" alt="" style="width: 50px; height: 50px" src="../assets/images/students/'+data.foto2+'" >';
    
     html += '   <label for="textinput-f">Dirección: '+data.direccion+', Teléfono: '+data.telefono+' </label>';
    
@@ -450,25 +499,74 @@ function PaintWayStop(data){
     html += '       <input name="ckbox-5-'+data.idalumno+'" id="ckbox-5-'+data.idalumno+'" type="checkbox" ';
     if (data.estado==5)
         html += '  checked="checked" ' ;
-    html +=     ' onchange="updateStateStudent('+data.idalumno+',5)" >';
-    html += '       <label for="ckbox-5-'+data.idalumno+'">Novedad</label>';
-    
+    html +=     '  >';
+    if (data.estado==5)
+        html += '       <label for="ckbox-5-'+data.idalumno+'">Novedad:'+selectNovedades(data.idalumno, data.idnovedad)+'</label>';
+    else
+        html += '       <label for="ckbox-5-'+data.idalumno+'">Novedad:'+selectNovedades(data.idalumno,-1)+'</label>';
     html += '   </div>';
     html += '</fieldset>';
     
     return html;
 }
 
-function updateStateStudent(idstudent,idstate,chk){
 
-    if ($('#ckbox-'+idstate+'-'+idstudent).prop("checked")){
+function getArrayNovedades(){
+       $.ajax({
+            type : "GET",
+            url : server + 'agent/get_all_novedades',        
+            dataType : "json",
+            data : {}
+        }).done(function(response){
+    
+            if(response.state == 'ok'){
+                for(var i in response.result){
+                    novedadesArray.push(response.result[i]);
+                    
+                }
+            }
+
+        });
+}
+
+
+function selectNovedades(idalumno, idnovedad){
+    var html = '';
+    html = '<select name="select-novedades-'+idalumno+'" id="select-novedades-'+idalumno+'" onchange="updateStateStudent('+idalumno+',5)" >';
+
+    html = html + '<option value="-1">...</option>';
+    for(var i in novedadesArray){
+        if ( novedadesArray[i].id==idnovedad)
+            html = html + '<option value=' + novedadesArray[i].id + ' selected>' + novedadesArray[i].descripcion + '</option>';
+        else
+            html = html + '<option value=' + novedadesArray[i].id + '>' + novedadesArray[i].descripcion + '</option>';
+    }
+    html = html + '</select>';
+    return html;   
+}
+
+function updateStateStudent(idstudent,idstate){
+
+    if ($('#ckbox-'+idstate+'-'+idstudent).prop("checked")||(idstate=='5')){
+        if(idstate=='5'){
+            idnovedad   = $('#select-novedades-'+idstudent).val(); 
+            desnovedad  = $('#select-novedades-'+idstudent+' option:selected').text();  
+        }else{
+            idnovedad   = 0;
+            desnovedad  = '';
+        }
+
         $.ajax({
             type : "GET",
             url : server + 'agent/update_state_student',        
             dataType : "json",
             data : {
-                student : idstudent,
-                state   : idstate
+                student     : idstudent,
+                state       : idstate,
+                idnovedad   : idnovedad,
+                desnovedad  : desnovedad,
+                latitud     : lat,
+                longitud    : lng
             }
         }).done(function(response){
             

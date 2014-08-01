@@ -359,7 +359,7 @@ $config['proxy_ips'] = '';
 
  //Custom config
  
-$config['app_name'] = 'Rutas';
+$config['app_name'] = 'Rutas - Sistema de Gestión de Recorridos para Instituciones';
 $config['max_verification_attemps'] = 10;
 $config['verification_interval'] = 16000; //In milliseconds
  

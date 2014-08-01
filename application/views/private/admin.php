@@ -30,7 +30,7 @@ a:hover
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- 
+	
 	<title><?= $this->config->item('app_name') ?></title>
 </head>
 <body>
@@ -60,9 +60,14 @@ a:hover
 		<a href='<?php echo site_url('admin/user_managervehicle')?>'>Rutas</a> |
 		<a href='<?php echo site_url('admin/vehicle_management')?>'>Vehiculos</a> |
 		<a href='<?php echo site_url('admin/agent_management')?>'>Conductores</a> |
+		<a href='<?php echo site_url('admin/novedades_management')?>'>Novedades</a> |
+		<a href='<?php echo site_url('admin/grados_management')?>'>Grados</a> |
 		<a href='<?php echo site_url('admin/student_management')?>'>Alumnos</a> |
 		<a href='<?php echo site_url('admin/student_stop_management')?>'>Paradas por alumno</a> |
 		<a href='<?php echo site_url('admin/way_stop_management')?>'>Paradas por ruta</a> |
+		<!--
+		<a href='<?php echo site_url('admin/stops_tracking') ?>'>Seguimiento Paradas</a> |
+		 -->
 		<a href='<?php echo site_url('admin/tabletAdminAgent') ?>'>Seguimiento Vehiculos</a> |
 	<?php 
 	}else
@@ -73,6 +78,8 @@ a:hover
 		<a href='<?php echo site_url('admin/student_management')?>'>Alumnos</a> |
 		<a href='<?php echo site_url('admin/student_stop_management')?>'>Paradas por alumno</a> |
 		<a href='<?php echo site_url('admin/way_stop_management')?>'>Paradas por ruta</a> |
+	<!--	<a href='<?php echo site_url('admin/stops_tracking') ?>'>Seguimiento Paradas</a> |
+	 -->
 		<a href='<?php echo site_url('admin/tabletCallAgent') ?>'>Seguimiento Vehiculos</a> |
 	<?php 	
 	}else
@@ -87,7 +94,7 @@ a:hover
 	</div> 
 
 	<div style='height:20px;'></div>  
-	<?php if( ($op=="solicitude_management") or ($op=="service_agent") ){ ?>
+	<?php if( ($op=="stops_tracking") ){ ?>
 	<div>
 		<form action='<?php echo site_url('admin')."/$op";?>' method='GET' > 
 			Fecha inicial : <input type='text' name='fechaini' value='<?php echo $fechaini; ?>' MAXLENGTH=20 />
@@ -114,6 +121,7 @@ a:hover
 
 </div>
 </div>
-	
+
+
 </body>
 </html>

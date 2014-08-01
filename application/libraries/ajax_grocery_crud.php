@@ -6,6 +6,7 @@ class ajax_grocery_CRUD extends grocery_CRUD {
 	private $state_code 			= null;
 	private $slash_replacement	= "_agsl_";
 	protected $relation_dependency		= array();
+	var $my_where = "";
 
 	function __construct()
 	{
@@ -21,8 +22,9 @@ class ajax_grocery_CRUD extends grocery_CRUD {
 	}
 
 
-	public function set_relation_dependency($target_field, $source_field, $relation_field_on_source_table)
+	public function set_relation_dependency($target_field, $source_field, $relation_field_on_source_table,$where='')
 	{
+		$my_where = $where;
 		$this->relation_dependency[$target_field] = array($target_field, $source_field,$relation_field_on_source_table);
 		return $this;
 	}
@@ -46,7 +48,7 @@ class ajax_grocery_CRUD extends grocery_CRUD {
 			$(document).ready(function() {
 				$($sourceElement).change(function() {
 					var selectedValue = $($sourceElement).val();
-					alert('selectedValue'+selectedValue);
+					//alert('selectedValue'+selectedValue);
 					//alert('post:'+'ajax_extension/$target_field/$relation_field_on_source_table/'+encodeURI(selectedValue.replace(/\//g,'$this->slash_replacement')));
 					$.post('ajax_extension/$target_field/$relation_field_on_source_table/'+encodeURI(selectedValue.replace(/\//g,'$this->slash_replacement')), {}, function(data) {
 					//alert('data'+data);
@@ -209,6 +211,10 @@ public function getStateInfo()
 	{
 		list($field_name , $related_table , $related_field_title, $where_clause, $order_by)  = $relation_info;
 
+	//	if ($my_where!='')
+	//		$where_clause = array($relation_key_field => $relation_key_value, 'activo' => 'S' );
+	//	else
+		
 		$where_clause = array($relation_key_field => $relation_key_value);
 		if(empty($relation_key_value)){
 			$relation_array = array();

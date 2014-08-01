@@ -15,7 +15,7 @@
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> 
     
     <script src="<?=base_url()?>assets/js/custripan.js"></script>
-    
+   
   	<script>
  		var lang = '<?=current_lang()?>';
  		var verification_interval = <?=ci_config('verification_interval')?>;
@@ -28,7 +28,7 @@
 <div data-role="page" id="page1">
 
     <div data-theme="b" data-role="header">
-    	<h3><?= $this->config->item('app_name') ?></h3>
+    	Seguimiento de vehiculos
     </div>
     <div data-role="content" class="padding-0">
          <div id="map_canvas"></div>

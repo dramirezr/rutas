@@ -36,7 +36,7 @@
         <form id="login-form" action="" method="POST">
             <div data-role="fieldcontain">
                 <label for="username">
-                    Codigo
+                    Código
                 </label>
                 <input name="username" id="username" placeholder="" value="" type="text">
             </div>
@@ -73,6 +73,7 @@
             </td>
             <td  align="right" width="20%">
                 <a href="#" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-close">Salir</a>
+                <a href="#login-page" data-role="button" id="show-login" style="display: none;">Show page "login"</a>
             </td>
         </tr>
         </tbody></table>
@@ -91,7 +92,7 @@
                
             </td>
             <td  align="right" width="20%">
-                <a data-role="button" data-theme="a" href="#maps-modal" data-rel="dialog" data-transition="pop" id="btn-vermapa">Ver mapa</a>
+                <a data-role="button" data-theme="a" href="#" data-rel="dialog" data-transition="pop" id="btn-maps-modal">Ver mapa</a>
             </td>
         </tr>
         </tbody></table>
@@ -110,7 +111,7 @@
    
     <div data-theme="b" data-role="footer" data-position="fixed">
         <h3>
-           © 2013 Good People Technologies
+           © 2014 Good People Technologies
         </h3>
     </div>
 </div>
@@ -132,9 +133,10 @@
 </div><!-- /page popup -->
 
 <!-- Detalle parada: #popup -->
-<div data-role="page" id="det-parada-modal" >
+<div data-role="page" id="det-parada-modal" data-close-btn="none">
     
         <div data-role="header" data-theme="b">
+           <a href="#" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-stop-back">Regresar</a>
            <h1>Punto de parada</h1> 
         </div><!-- /header -->
         <div data-role="content" id="idcontent" data-theme="b">
@@ -151,26 +153,7 @@
             
         </div>
         
-        <p>
-            <a href="#page-ini" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-stop-back">Regresar</a>
-        </p>
 </div><!-- /page popup -->
-
-<!-- Start of third page: #popup -->
-<div data-role="page" id="maps-modal2" data-close-btn="none">
-    
-        <div data-role="header" data-theme="b">
-            <a href="#" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-map-back">Regresar</a>
-            <h1>Mapa del servicio</h1>
-        </div><!-- /header -->
-        <div data-role="content" id="map_content" data-theme="a">
-            <div id="map_content2">
-                <div id="map_canvas2"></div>
-            </div>
-        </div>
-   
-</div><!-- /page popup -->
-
 
 
 </body>

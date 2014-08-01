@@ -38,7 +38,7 @@
                     <span id="select-rutas-p"></span>
                     <a href="#" id='btn-search-ruta'  align="left" data-role="button" data-icon="search" data-iconpos="notext" data-theme="c" data-inline="true">Buscar</a>
                 </td><td >
-                    
+                  
                 </td>
                 <td >
                                         

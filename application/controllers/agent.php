@@ -18,6 +18,7 @@ class Agent extends CI_Controller {
 		$this->lang->load('dashboard');
 		
 		$this->load->model('agente');
+		$this->load->model('vehiculos');
 			
 	}
 	
@@ -39,8 +40,10 @@ class Agent extends CI_Controller {
 		$id = $this->input->get_post('id');
 		
 		$id = $id ? $id : $this->agent->id;
+		$idvehiculo = $this->agent->vehiculo;
 		if(($lat<>0) and ($lat<>0) ){ 
 			$this->agente->update($id, array('latitud' => $lat, 'longitud' => $lng, 'fecha_localizacion' => date('Y-m-d H:i:s')));
+			//$this->vehiculos->update($idvehiculo, array('latitud' => $lat, 'longitud' => $lng, 'fecha_localizacion' => date('Y-m-d H:i:s')));
 			die(json_encode(array('state' => 'ok')));
 		}else{
 			die(json_encode(array('state' => 'error')));
@@ -222,21 +225,63 @@ function verify_service_status(){
 	
 	function update_state_student(){
 		
-		$id = $this->input->get_post('student');
-		$estado = $this->input->get_post('state');
+		$id 		= $this->input->get_post('student');
+		$estado 	= $this->input->get_post('state');
+		$novedad 	= $this->input->get_post('idnovedad');
+		$desnovedad = $this->input->get_post('desnovedad');
+		$latitud 	= $this->input->get_post('latitud');
+		$longitud 	= $this->input->get_post('longitud');
+
 		$this->load->model('alumno');
-		$update = $this->alumno->update($id, array('estado' => $estado));
-		if ($update==1)
+		$update = $this->alumno->update($id, array('estado' => $estado,'idnovedad' => $novedad));
+		if ($update==1){
+			$des_est = '';
+			switch ($estado) {
+			    case '1':
+			        $des_est = 'Entregado en casa';break;
+			    case '2':
+			        $des_est = 'En camino al colegio';break;
+			    case '3':
+			        $des_est = 'En el colegio';break;
+			    case '4':
+			        $des_est = 'De regreso a casa';break;
+			    case '5':
+			        $des_est = 'Ha ocurrido una novedad: '.$desnovedad;break;
+			}
+
+			$this->load->model('seguimiento');
+			$datos['idalumno'] 		= $id;
+			$datos['idruta'] 		= $this->agent->idruta;
+			$datos['idagente'] 		= $this->agent->id;
+			//sucursal del agente, o podria ser la sucursal del estudiante???
+			$datos['idsucursal'] 	= $this->agent->idsucursal;
+			$datos['fecha'] 		= date('Y-m-d H:i:s');
+			$datos['descripcion']	= $des_est;
+			$datos['latitud'] 		= $latitud;
+			$datos['longitud'] 		= $longitud;
+			$this->seguimiento->create($datos);
+		
 			die(json_encode(array('state' => 'ok')));
+		}
 		else
 			die(json_encode(array('state' => '')));
 	}
 
+
+	function get_all_novedades(){
+		$this->load->model('novedades');
+		$idsucursal = $this->agent->idsucursal;
+		$novedades = $this->novedades->get_all_sucursal($idsucursal);
+		die(json_encode(array('state' => 'ok','result' => $novedades)));
+	}
+
+
+
+
+
+
 	function close(){
-		$this->session->unset_userdata('agente');
-		$this->session->sess_destroy();
-		
-		redirect('/agent/'); 
+	
 	}
 
 

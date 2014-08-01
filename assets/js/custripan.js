@@ -48,35 +48,34 @@ function validarEnter(e) {
     } 
 }
 
+var flag='';
 function getTaxiLocation(){
-     
    $.ajax({
         type : "GET",
         url : lang + '../../../api/get_agets_location',        
         dataType : "json"
-        
     }).done(function(response){
 
         if(response.state == 'ok'){
-            
             var coordenadas;
             var estadoagent;
-
             deleteOverlays();
-
+            var bounds = new google.maps.LatLngBounds();
             for(var i in response.agent){
-              
                 if(response.agent[i].fecha_localizacion>response.agent[i].datesytem)
                     estadoagent = 0
                 else
                     estadoagent = 1
                 coordenadas =  new google.maps.LatLng( response.agent[i].latitud, response.agent[i].longitud);
-
                 setTaxiIcon(coordenadas, response.agent[i],estadoagent );
-
-                // limits.extend(coordenadas);
+                bounds.extend(coordenadas);
             }
-            
+
+            if (flag!='1'){
+                map.setCenter(bounds.getCenter());   
+                map.fitBounds(bounds);
+            }
+            flag='1';
         }
     });
    

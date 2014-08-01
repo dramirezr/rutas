@@ -220,6 +220,15 @@ class Api extends CI_Controller {
 				
 		die(json_encode(array('state' => 'ok', 'rutas' => $rutas)));
 	}
+
+	function select_vehicle(){
+		$this->load->model('vehiculos');
+		$idruta = $this->input->get_post('idruta');
+		
+		$vehiculo = $this->vehiculos->get_vehiculo_cust($idruta);
+				
+		die(json_encode(array('state' => 'ok', 'result' => $vehiculo)));
+	}
 	
 	function saveStop(){
 		$this->load->model('paradas');
@@ -262,5 +271,19 @@ class Api extends CI_Controller {
 		die(json_encode(array('state' => 'ok')) );
 	}
 
+
+	function get_vehicle_way(){
+		$this->load->model('vehiculos');
+		$idruta = $this->input->get_post('idruta');
+		$vehiculo = $this->paradas->get_vehicle_way($idruta);
+		die(json_encode(array('state' => 'ok','result' => $vehiculo)));
+	}	
+
+	function get_vehicle(){
+		$this->load->model('vehiculos');
+		$idvehiculo = $this->input->get_post('idvehiculo');
+		$vehiculo = $this->vehiculos->get_by_id($idvehiculo);
+		die(json_encode(array('state' => 'ok','result' => $vehiculo)));
+	}
 
 }

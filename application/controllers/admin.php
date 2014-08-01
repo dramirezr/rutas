@@ -253,7 +253,9 @@ class Admin extends CI_Controller {
 	function vehicle_management()
 	{
 		if(($this->userconfig->perfil=='ADMIN')or($this->userconfig->perfil=='CALL')){
-			$crud = new grocery_CRUD();
+			//$crud = new grocery_CRUD();
+			$this->load->library('ajax_grocery_CRUD');
+            $crud = new ajax_grocery_CRUD();
 
 			$crud->set_theme('datatables');
 			$crud->set_table('vehiculos');
@@ -263,6 +265,8 @@ class Admin extends CI_Controller {
 			$crud->display_as('idsucursal', 'Institución');
 			$crud->display_as('propietario', 'Ruta');
 			$crud->required_fields('idsucursal','placa','propietario');
+
+			$crud->set_relation_dependency('propietario','idsucursal','idsucursal');
 
 			if($this->userconfig->perfil=='ADMIN'){
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
@@ -291,7 +295,10 @@ class Admin extends CI_Controller {
 	{
 		if(($this->userconfig->perfil=='ADMIN')or($this->userconfig->perfil=='CALL')){
 		
-			$crud = new grocery_CRUD();
+			//$crud = new grocery_CRUD();
+
+			$this->load->library('ajax_grocery_CRUD');
+            $crud = new ajax_grocery_CRUD();
 
 			$crud->set_theme('datatables');
 			$crud->set_table('agente');
@@ -321,6 +328,7 @@ class Admin extends CI_Controller {
 				$crud->set_relation('vehiculo', 'vehiculos', 'placa','idsucursal IN ("'.$this->userconfig->idsucursal.'")');
 			}
 	
+			$crud->set_relation_dependency('vehiculo','idsucursal','idsucursal');
 
         	$crud->callback_edit_field('clave',array($this,'set_password_input_to_empty'));
     		$crud->callback_add_field('clave',array($this,'set_password_input_to_empty'));
@@ -382,14 +390,19 @@ class Admin extends CI_Controller {
 	function student_management()
 	{
 		if(($this->userconfig->perfil=='ADMIN')or($this->userconfig->perfil=='CALL')){
-			$crud = new grocery_CRUD();
+			//$crud = new grocery_CRUD();
+
+			$this->load->library('ajax_grocery_CRUD');
+            $crud = new ajax_grocery_CRUD();
 
 			$crud->set_theme('datatables');
 			$crud->set_table('alumno');
 			$crud->set_subject('Alumnos');
-			$crud->columns('codigo','idsucursal','nombre','idparada');
-			$crud->fields('codigo','idsucursal','nombre','foto1','foto2','idparada');
+			$crud->columns('codigo','idsucursal','idgrado','nombre','idparada');
+			$crud->fields('codigo','idsucursal','idgrado','nombre','foto1','foto2','idparada');
 			$crud->display_as('idsucursal', 'Institución');
+			$crud->display_as('idgrado', 'Grado cursado');
+			
 			$crud->display_as('idparadas', 'Punto de parada');
 			$crud->required_fields('codigo','idsucursal','nombre');
 			//$crud->set_relation('idparadas', 'paradas', 'direccion');
@@ -398,6 +411,9 @@ class Admin extends CI_Controller {
 			$crud->display_as('foto1', 'Foto uno');
 			$crud->display_as('foto2', 'Foto dos');
 			$crud->display_as('idparada', 'Punto de parada');
+			
+
+
 			$state = $crud->getState();
 	    	$state_info = $crud->getStateInfo();
 	 		$primary_key='-1';
@@ -405,14 +421,20 @@ class Admin extends CI_Controller {
 	    	{
 	        	$primary_key = $state_info->primary_key;
 	    	}
+
 			if($this->userconfig->perfil=='ADMIN'){
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
 				$crud->set_relation('idparada', 'paradas', 'descripcion', array('idalumno' => $primary_key));
+				$crud->set_relation('idgrado', 'grados', 'descripcion');
 			}
 			else{
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre','id IN ("'.$this->userconfig->idsucursal.'")');			
+				$crud->set_relation('idgrado', 'grados', 'descripcion','id IN ("'.$this->userconfig->idsucursal.'")');			
 				$crud->set_relation('idparada', 'paradas', 'descripcion', array('idalumno' => $primary_key));
 			}
+
+			$crud->set_relation_dependency('idgrado','idsucursal','idsucursal');
+
 
 			if($this->userconfig->perfil<>'ADMIN')
 				$crud->where('alumno.idsucursal =', $this->userconfig->idsucursal);
@@ -425,7 +447,71 @@ class Admin extends CI_Controller {
 		}
 	}
 
- 	function paradas($idalumno){
+	function novedades_management()
+	{
+		if(($this->userconfig->perfil=='ADMIN')or($this->userconfig->perfil=='CALL')){
+			$crud = new grocery_CRUD();
+			
+			$crud->set_theme('datatables');
+			$crud->set_table('novedades');
+			$crud->set_subject('Novedades');
+			$crud->columns('idsucursal','descripcion');
+			$crud->fields('idsucursal','descripcion');
+			$crud->display_as('idsucursal', 'Institución');
+			$crud->required_fields('idsucursal','descripcion');
+
+			if($this->userconfig->perfil=='ADMIN'){
+				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
+			}
+			else{
+				$crud->set_relation('idsucursal', 'sucursales', 'nombre','id IN ("'.$this->userconfig->idsucursal.'")');			
+			}
+
+
+			if($this->userconfig->perfil<>'ADMIN')
+				$crud->where('novedades.idsucursal =', $this->userconfig->idsucursal);
+			
+			$output = $crud->render();
+			$output -> op = 'novedades_management';
+			$this->_admin_output($output);
+		}else{
+			$this->close();
+		}
+	}
+
+
+	function grados_management()
+	{
+		if(($this->userconfig->perfil=='ADMIN')or($this->userconfig->perfil=='CALL')){
+			$crud = new grocery_CRUD();
+
+			$crud->set_theme('datatables');
+			$crud->set_table('grados');
+			$crud->set_subject('grados');
+			$crud->columns('idsucursal','descripcion');
+			$crud->fields('idsucursal','descripcion');
+			$crud->display_as('idsucursal', 'Institución');
+			$crud->required_fields('idsucursal','descripcion');
+
+			if($this->userconfig->perfil=='ADMIN'){
+				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
+			}
+			else{
+				$crud->set_relation('idsucursal', 'sucursales', 'nombre','id IN ("'.$this->userconfig->idsucursal.'")');			
+			}
+
+			if($this->userconfig->perfil<>'ADMIN')
+				$crud->where('grados.idsucursal =', $this->userconfig->idsucursal);
+			
+			$output = $crud->render();
+			$output -> op = 'novedades_management';
+			$this->_admin_output($output);
+		}else{
+			$this->close();
+		}
+	}
+
+	function paradas($idalumno){
 		if(($this->userconfig->perfil=='ADMIN')or($this->userconfig->perfil=='CALL')){
 		  $crud = new grocery_CRUD();
 		  $crud->set_table('paradas');
@@ -441,6 +527,71 @@ class Admin extends CI_Controller {
 		}
 
 	}
+
+
+	function stops_tracking(){
+		$crud = new grocery_CRUD();
+
+		$crud->unset_add();
+		$crud->unset_delete();
+		$crud->unset_edit();
+		
+		$crud->set_theme('datatables');
+		$crud->set_table('seguimiento');
+		$crud->set_subject('Seguimiento de paradas');
+		$crud->columns('idsucursal','idruta','idagente','fecha','idalumno','descripcion');
+ 		//$crud->add_action('Ver Posición', '', '','ui-icon-image',array($this,'get_row_id' ));
+ 		$crud->add_action('Ver mapa', '', '','ui-icon-image',array($this,'showTracking'));
+		$crud->display_as('idsucursal', 'Institución');
+		$crud->display_as('idalumno', 'Alumno');
+		$crud->display_as('idruta', 'Ruta');
+		$crud->display_as('idagente', 'Conductor');
+		
+		$crud->set_relation('idsucursal', 'sucursales', 'nombre');			
+		$crud->set_relation('idalumno', 'alumno', '{codigo} {nombre}');		
+		$crud->set_relation('idruta', 'usuarios', 'nombre','perfil IN ("CUST")');
+		$crud->set_relation('idagente', 'agente', 'nombre');			
+
+		$filtro = $this->input->get('fechaini');
+		if ($filtro!=''){
+			$fi = $this->input->get('fechaini');
+			$ff = $this->input->get('fechafin');
+		}else{
+			$fi = date('Y-m-d 00:00:00');
+        	$ff = date('Y-m-d 23:59:59');
+		}
+		    
+		if($this->userconfig->perfil<>'ADMIN')
+			$where = array('fecha >= ' => $fi, 'fecha <= ' => $ff,'seguimiento.idsucursal = '  => $this->userconfig->idsucursal);
+		else	
+			$where = array('fecha >= ' => $fi, 'fecha <= ' => $ff);
+		$crud->where($where);  
+		  
+		$output = $crud->render();
+		$output -> fechaini = $fi;
+		$output -> fechafin = $ff;
+		$output -> op = 'stops_tracking';
+
+		$this->_admin_output($output);
+
+	}
+
+	function showTracking($primary_key , $row)
+	{
+    	//return 'http://maps.googleapis.com/maps/api/staticmap?markers='.$row->latitud.','.$row->longitud.'&zoom=15&size=600x350';
+    	return  site_url('admin/viewstops_tracking').'?lat='.$row->latitud.'&lng='.$row->longitud.'&idalumno='.$row->idalumno;
+	}
+
+	function viewstops_tracking()
+	{
+		$lat = $this->input->get('lat');
+		$lng = $this->input->get('lng');
+		$idalumno = $this->input->get('idalumno');
+	
+		$this->load->view('private/viewstops_tracking',array('op' => '/admin/viewstops_tracking','idalumno' => $idalumno,'lat' => $lat,'lng' => $lng));
+	}
+	
+ 	
 	
 	function showAgent()
 	{
@@ -463,11 +614,9 @@ class Admin extends CI_Controller {
 		$this->load->view('private/viewAgent',array('op' => '/admin/viewAgent'));
 	}
 	
-	function underConstuction()
-	{
-		$this->load->view('public/underconstuction',array('op' => ''));
-	}
-
+	
+	
+	
 
 	public function close()
     {

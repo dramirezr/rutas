@@ -19,7 +19,7 @@
   	<script>
  		var lang = '<?=current_lang()?>';
  		
-        var form_view = 'view_estudent_stop';
+        var form_view = 'view_stops_tracking';
  	</script>
 </head>
  
@@ -28,27 +28,10 @@
 <div data-role="page" id="page-ini">
 
     <div data-theme="b" data-role="header">
-
-       
-        <div data-role="fieldcontain">
-            
-            <table border=0 width="70%"><tbody>
-                <tr><td >
-                    <label for="select-alumnos" class="select">Alumno:</label>
-                    <span id="select-alumnos"></span>
-                    <a href="#" id='btn-search-alumno'  align="left" data-role="button" data-icon="search" data-iconpos="notext" data-theme="c" data-inline="true">Buscar</a>
-                </td><td >
-                    
-                </td>
-                <td >
-                    <a href="#" id='btn-add-stop'  align="left" data-role="button" data-icon="search"  data-theme="c" data-inline="true">Adicionar punto de parada</a>
-                    
-                </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-       
+        <h1>Seguimientos de Paradas</h1> 
+        <input id="select-allalumnos" name="select-allalumnos" type="hidden" value="<?=$idalumno?>">
+        <input id="latitud" name="latitud" type="hidden" value="<?=$lat?>">
+        <input id="latitud" name="latitud" type="hidden" value="<?=$lng?>">
     </div>
     <div data-role="content" class="padding-0">
          <div id="map_canvas"></div>
@@ -56,10 +39,8 @@
     
 </div>
 
-
 <!-- Detalle parada: #popup -->
 <div data-role="page" id="det-parada-modal" >
-    
         <div data-role="header" data-theme="b">
            <h1>Punto de parada</h1> 
            <label for="direccion-sug"><span id="direccion-sug"></span></label>
@@ -79,28 +60,11 @@
             <input name="descripcion" id="descripcion" placeholder="" value="" type="text">
             <label for="telefono">Teléfono:</label>
             <input name="telefono" id="telefono" placeholder="" value="" type="text">
-            <label for="select-rutas">Ruta:</label>
-            <span id="select-rutas"></span>
-            <input type="checkbox" name="chk-principal" id="chk-principal" class="custom" />
-            <label for="chk-principal">Parada principal</label>
-            
         </div>
-        
         <p>
-            <a href="#" data-role="button" data-mini="true" data-inline="true" id="btn-save-stop" data-rel="back" >Grabar y regresar</a>
-            <a href="#" data-role="button" data-mini="true" data-inline="true" id="btn-open-dialog-delete">Borrar</a>
             <a href="#page-ini" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-cancel-stop">Regresar</a>
         </p>
 </div><!-- /page popup -->
 
-<div id="dialog-delete-parada" data-role="page"  >
-        <!-- icono para cerrar esto da una apareicia mas estilizada -->
-        <a href="#page-ini" data-role="button" data-icon="delete" data-iconpos="notext" data-theme="b" >Eliminar</a>
-        <article data-role="content">
-            <h2>Desea eliminar la parada?</h2>
-            <a href="#page-ini" data-role="button" id="btn-delete-stop" >Si</a>
-            <a href="#det-parada-modal" data-role="button" data-rel="back">No</a>
-        </article>
-    </div>
 </body>
 </html>
