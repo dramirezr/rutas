@@ -124,6 +124,8 @@ a:hover{
 		<li><a href='<?php echo site_url('admin/user_managervehicle')?>'>Rutas</a></li>
 		<li><a href='<?php echo site_url('admin/vehicle_management')?>'>Vehiculos</a></li>
 		<li><a href='<?php echo site_url('admin/agent_management')?>'>Conductores</a></li>
+		<li><a href='<?php echo site_url('admin/novedades_management')?>'>Novedades</a></li>
+		<li><a href='<?php echo site_url('admin/grados_management')?>'>Grados</a></li>
 		<li><a href='<?php echo site_url('admin/student_management')?>'>Alumnos</a></li>
 		<li><a href='<?php echo site_url('admin/student_stop_management')?>'>Paradas por alumno</a></li>
 		<li><a href='<?php echo site_url('admin/way_stop_management')?>'>Paradas por ruta</a></li>
