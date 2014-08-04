@@ -29,41 +29,25 @@ var agentMarker;
 var LocationDemonId=null;
 
 
-
-
-function getSelectedText(elementId) {
-    var elt = document.getElementById(elementId);
-
-    if (elt.selectedIndex == -1)
-        return null;
-
-    return elt.options[elt.selectedIndex].text;
-}
-
-
-
-
 $(document).ready(function() {
-    if (form_view=='view_estudent_stop'){
-        selectAlumnos();
-    }
+    if (form_view=='view_student_stop'){
+        initStudentStop();
+    }else
     if (form_view=='view_way_stop'){
-        selectRutas_p();
+        initWayStop();
+    }else
+    if (form_view=='view_stops_tracking'){
+        initStopsTracking();
     }
-  
-    selectRutas();
-   
-    localizame(); 
+});
 
-    
+function initStudentStop(){
+    selectAlumnos();
+    selectRutas();
+    localizame(); 
     $('#btn-search-alumno').click(function(e){
         getIconLocation();
     });
-
-     $('#btn-search-ruta').click(function(e){
-        getIconLocationWay();
-    });
-
 
     $('#btn-save-stop').click(function(e){
         saveStop();
@@ -73,24 +57,49 @@ $(document).ready(function() {
         deleteStop();
     });
   
-   $('#btn-open-dialog-delete').click(function(e){
+    $('#btn-open-dialog-delete').click(function(e){
        $.mobile.changePage('#dialog-delete-parada', { transition: "pop", role: "dialog", reverse: false } );
     });
 
     $('#btn-add-stop').click(function(e){
         if ($('#select-allalumnos').val()!="-1"){
             var coordenadas;
-            
             coordenadas = map.getCenter();
             var result = {idparada:"-1", idalumno:$('#select-allalumnos').val(), nombre:getSelectedText('select-allalumnos'), telefono:"", direccion:"", idruta:"-1", descripcion:""}; 
             console.log('result:'+result);
             setIcons(coordenadas, result);    
         }
     });
-    
-
    
-});
+}
+
+function initWayStop(){
+    selectRutas_p();
+    selectRutas();
+    localizame(); 
+
+    $('#btn-search-ruta').click(function(e){
+        getIconLocationWay();
+    });
+
+    $('#btn-save-stop').click(function(e){
+        saveStop();
+    });
+}
+
+function initStopsTracking(){
+    localizame(); 
+    
+}
+
+function getSelectedText(elementId) {
+    var elt = document.getElementById(elementId);
+
+    if (elt.selectedIndex == -1)
+        return null;
+
+    return elt.options[elt.selectedIndex].text;
+}
 
 function deleteStop(){
        $.ajax({
@@ -135,7 +144,7 @@ function saveStop(){
             }
         }).done(function(response){
             if(response.state == 'ok'){
-                if (form_view=='view_estudent_stop')
+                if (form_view=='view_student_stop')
                     getIconLocation();
                 else
                     if (form_view=='view_way_stop')
@@ -274,7 +283,8 @@ function deleteOverlays() {
 }
 
 function getIconLocation(){
-    var elemento = $('#select-allalumnos').val();  
+    var elemento = $('#select-allalumnos').val();
+    console.log('alumno:'+elemento); 
     $.ajax({
         type : "GET",
         url : lang + '../../../api/get_stop_location',        
@@ -333,8 +343,6 @@ function getIconLocationWay(){
                     bounds.extend(coordenadas);
                 }
                 getBusLocation(idruta,bounds);
-
-                
             }
         });
     }else
@@ -383,7 +391,7 @@ function setIconsBus(coordenadas, result){
         position:coordenadas,
         map: map,
         //animation: google.maps.Animation.DROP, 
-        draggable: true,
+        draggable: false,
         icon : icon_bus,
         title : 'Placa: '+result.placa+' - Ult. Fecha act.: ' +result.fecha_localizacion 
     });
@@ -396,7 +404,7 @@ function setIcons(coordenadas, result){
     //if (result.idalumno!="-1"){
         var popup;
         var icon_casa
-        if (form_view=='view_estudent_stop'){
+        if ((form_view=='view_student_stop')||(form_view=='view_stops_tracking')){
             if(result.codparada==result.idparada)
                 icon_casa =  '/assets/images/casa.png';
             else
@@ -526,12 +534,20 @@ function cargarMapa() {
     };/* HYBRID  Configuramos una serie de opciones como el zoom del mapa y el tipo.*/
 
     map = new google.maps.Map($("#map_canvas").get(0), myOptions); /*Creamos el mapa y lo situamos en su capa */
+    
+    if (form_view=='view_stops_tracking'){
+        getIconLocation();
+         
+        var coorBus = new google.maps.LatLng($('input[name="latitud"]').val(),$('input[name="longitud"]').val());
+        console.log($('input[name="latitud"]').val()+'****'+$('input[name="longitud"]').val());
+        //var coorBus = new google.maps.LatLng(4.10916,-76.1889);
+        iconMarkerBus = new google.maps.Marker({
+            position:coorBus,
+            map: map,
+            icon : '/assets/images/bus.png'
+        });
+    }
 
-/*    google.maps.event.addListener(map, 'click', function(event)
-    {
-        addMarker(event.latLng);
-    });
-*/
 }
 
 

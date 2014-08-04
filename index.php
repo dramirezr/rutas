@@ -17,9 +17,10 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
- //define('ENVIRONMENT', 'testing');
+ 
+	//define('ENVIRONMENT', 'development');
+	//define('ENVIRONMENT', 'testing');
 	define('ENVIRONMENT', 'production');
-//	date_default_timezone_set('America/Bogota');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING

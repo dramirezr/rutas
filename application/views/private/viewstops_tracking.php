@@ -26,12 +26,12 @@
 <body>
 
 <div data-role="page" id="page-ini">
-
+    <input id="select-allalumnos" name="select-allalumnos" type="hidden" value="<?=$idalumno?>">
+    <input id="latitud" name="latitud" type="hidden" value="<?=$lat?>">
+    <input id="longitud" name="longitud" type="hidden" value="<?=$lng?>">
     <div data-theme="b" data-role="header">
-        <h1>Seguimientos de Paradas</h1> 
-        <input id="select-allalumnos" name="select-allalumnos" type="hidden" value="<?=$idalumno?>">
-        <input id="latitud" name="latitud" type="hidden" value="<?=$lat?>">
-        <input id="latitud" name="latitud" type="hidden" value="<?=$lng?>">
+        <a href="#" data-role="button" data-mini="true" data-inline="true" data-rel="back" >Regresar</a>
+        <h3>Seguimientos de Paradas</h3>
     </div>
     <div data-role="content" class="padding-0">
          <div id="map_canvas"></div>

@@ -571,7 +571,7 @@ class Admin extends CI_Controller {
 		$output -> fechaini = $fi;
 		$output -> fechafin = $ff;
 		$output -> op = 'stops_tracking';
-
+		//$output -> url = '/admin/viewstops_tracking';
 		$this->_admin_output($output);
 
 	}
@@ -588,6 +588,7 @@ class Admin extends CI_Controller {
 		$lng = $this->input->get('lng');
 		$idalumno = $this->input->get('idalumno');
 	
+		//$this->load->view('private/admin',array('op' => 'viewstops_tracking','url' => '/admin/viewstops_tracking','idalumno' => $idalumno,'lat' => $lat,'lng' => $lng));
 		$this->load->view('private/viewstops_tracking',array('op' => '/admin/viewstops_tracking','idalumno' => $idalumno,'lat' => $lat,'lng' => $lng));
 	}
 	

@@ -19,7 +19,7 @@
   	<script>
  		var lang = '<?=current_lang()?>';
  		
-        var form_view = 'view_estudent_stop';
+        var form_view = 'view_student_stop';
  	</script>
 </head>
  
