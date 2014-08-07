@@ -51,10 +51,30 @@ class Users extends CI_Controller {
 	function get_location_history(){
 		$this->load->model('seguimiento');
 		$id = $this->input->get_post('id');
-		$seguimiento = $this->seguimiento->get_by_id($id);
+		$seguimiento = $this->seguimiento->get_seguimiento_id($id);
 		die(json_encode(array('state' => 'ok', 'result' => $seguimiento)));
 	}
+
+	function get_location_vehicle(){
+		$this->load->model('vehiculos');
+		$this->load->model('seguimiento');
+
+		$idruta = $this->input->get_post('idruta');
+		$iduser = $this->input->get_post('iduser');
+		
+		$vehiculo    = $this->vehiculos->get_vehiculo_cust($idruta);
+		$seguimiento = $this->seguimiento->get_max_iduser($iduser);
+				
+		die(json_encode(array('state' => 'ok', 'result' => $vehiculo, 'idmax' => $seguimiento->idmax)));
+	}
 	
+	function get_state_user(){
+		$iduser = $this->input->get('iduser');
+		$this->load->model('alumno');
+		$usuario = $this->alumno->get_state($iduser);
+		die(json_encode(array('state' => 'ok', 'result' => $usuario)));
+	}
+
 	public function close()
     {
     	//cerrar sesión

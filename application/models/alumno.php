@@ -50,5 +50,17 @@ class Alumno extends CI_Model {
 		return $result;	
 	}
 
+	function get_state($iduser){
+		$sql = 	" SELECT s.fecha, s.descripcion as estado ";
+		$sql .= " FROM alumno a ";
+		$sql .= " left join seguimiento s on(a.idseguimiento=s.id) ";
+		$sql .= " where a.id = $iduser "; 
+ 		$result = $this->db->query($sql)->result();
+
+		if(!count($result))
+			return null;
+		return $result[0];		
+	}
+
 	
 }

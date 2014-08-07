@@ -36,11 +36,11 @@ var iduser = null;
 var idruta = null;
 var busLocationDemonId;
 var verification_interval = null;
-
+var MAX_ID_HIST = 0;
 
 $(document).ready(function() {
     
-    //localizame(); 
+    $("#audio-wrap").hide();
 
     $('#do-login').click(function(e){
         e.preventDefault();
@@ -63,11 +63,9 @@ $(document).ready(function() {
   
 });
 
-$(document).on('pagebeforeshow', '#dashboard', function(){ 
-    $('#map_canvas').css('width', '100%');
-    $('#map_canvas').css('height', '300px');
- });
-
+function play_sound(element) {
+    document.getElementById(element).play();
+}
 
 function login(id, key){
     $.ajax({
@@ -130,17 +128,17 @@ function selectHistory(){
                         html = html + '<optgroup label="'+fecha+'">';
                         fectem   =   fecha;
                         flag='0'; 
-
                     }else{
                        flag     =   '1';  
                     }
-                    descripcion = response.result[i].descripcion; 
+                    descripcion = response.result[i].descripcion.substring(0,23); 
                     html = html + '<option value=' + response.result[i].id + '>' + descripcion.trim() + '</option>';
                     
                 }
                 html = html + '</select>';
             }
-
+            
+            MAX_ID_HIST = response.result[0].id;
             $('#select-history').html(html);
             $('#select-history').trigger( "create" );
         });
@@ -157,8 +155,6 @@ function getIconLocation(){
             cachehora : (new Date()).getTime(),
             idalumno  : elemento
         }
-        
-        
     }).done(function(response){
 
         if(response.state == 'ok'){
@@ -243,17 +239,26 @@ function getBusLocationHistoy(){
             if(response.state == 'ok'){
                 deleteOverlaysBus();
                 var coordenadas;
-                var icon_bus;
-                icon_bus =  '../assets/images/bus2.png';
+                console.log(response.result.latitud +','+ response.result.longitud);
                 coordenadas =  new google.maps.LatLng( response.result.latitud, response.result.longitud);
                 agentMarker = new google.maps.Marker({
                     position:coordenadas,
                     map: map,
                     animation: google.maps.Animation.DROP, 
-                    icon : icon_bus,
+                    icon : '../assets/images/bus2.png',
                     title : response.result.descripcion+' '+response.result.fecha 
                 });
 
+                var popup;
+                google.maps.event.addListener(agentMarker, 'click', function(){
+                    if(!popup)
+                        popup = new google.maps.InfoWindow();
+                    var note =  'Ruta : ' + response.result.ruta + '<br> Conductor : ' + response.result.agente + 
+                            '<br> Estado : ' + response.result.descripcion + '<br> fecha : ' + response.result.fecha ;
+                    popup.setContent(note);
+                    popup.open(map, this);
+                });    
+    
                 map.setCenter(coordenadas);
             }
         });
@@ -261,18 +266,38 @@ function getBusLocationHistoy(){
 }
 
 
+function getStateUser(id){
+    $.ajax({
+        type : "GET",
+        url : server + 'users/get_state_user',         
+        dataType : "json",
+        data : {
+            iduser : id
+        }
+    }).done(function(response){
+        if(response.state=='ok'){
+            var user = response.result;
+            $('#user-estado').html('Estado: '+user.estado);
+            $('#user-fecha').html('Fecha:   '+user.fecha);
+            play_sound('alert');
+
+        }
+    });     
+}
+
+
 function getBusLocation(ruta){
     $.ajax({
         type : "GET",
-        url : server + 'api/select_vehicle',        
+        url : server + 'users/get_location_vehicle',        
         dataType : "json",
         data : {
             cachehora : (new Date()).getTime(),
-            idruta  : ruta
+            idruta  : ruta,
+            iduser  : iduser
         }
         
     }).done(function(response){
-
         if(response.state == 'ok'){
             var coordenadas;
             for(var i in response.result){
@@ -280,9 +305,15 @@ function getBusLocation(ruta){
                 setIconsBus(coordenadas, response.result[i]);
             }
 
+            if (response.idmax!=MAX_ID_HIST){
+                selectHistory();
+                getStateUser(iduser);
+            }
+            
         }
     });
 }
+
 
 
 function setIconsBus(coordenadas, result){
@@ -302,6 +333,18 @@ function setIconsBus(coordenadas, result){
         icon : icon_bus,
         title : 'Placa: '+result.placa+' - Ult. Fecha act.: ' +result.fecha_localizacion 
     });
+
+    var popup;
+    google.maps.event.addListener(agentMarker, 'click', function(){
+        if(!popup){
+            popup = new google.maps.InfoWindow();
+        }
+        var note =  'Placa : ' + result.placa + 
+                    '<br> Ult. Fecha act. : ' + result.fecha_localizacion;
+                       
+        popup.setContent(note);
+        popup.open(map, this);
+    });  
                
 }
 

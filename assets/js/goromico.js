@@ -212,7 +212,6 @@ function selectRutas_p(){
             $('#select-rutas-p').html(html);
 
         });
-       
 }
 
    

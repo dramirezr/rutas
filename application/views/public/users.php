@@ -31,7 +31,9 @@
 
 <body>
 <div data-role="popup" id="popupBasic"></div>
-
+<div id="audio-wrap">
+    <audio id="alert" src="<?=base_url()?>assets/audio/alert.mp3" type="audio/mpeg"  autobuffer controls></audio>
+</div>
 <!-- Login -->
 <div data-role="page" id="login-page">
     <div data-theme="b" data-role="header">
@@ -78,16 +80,16 @@
     <div data-theme="b" data-role="header">
         <table border=0 width="100%"><tbody>
         <tr>
-            <td align="center" width="20%">
+            <td align="center" width="30%">
                <img id="user-photo" style="width: 50px; height: 50px" src="" >
             </td>
-            <td align="left" width="40%">
+            <td align="left" width="60%">
                <label id="user-nombre"></label><br>
                <label id="user-estado"></label><br>
                <label id="user-fecha"></label>
                 
             </td>
-            <td  align="right" width="20%">
+            <td  align="right" width="10%">
                  <a href="#" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-close">Salir</a>
                 <a href="#login-page" data-role="button" id="show-login" style="display: none;">Pagina Login</a>
             </td>
@@ -100,7 +102,7 @@
             </td>
             
             <td  align="right" width="100%">
-                <a data-role="button" data-theme="a" href="#" data-rel="dialog" data-transition="pop" id="btn-real-time">En tiempo real</a>
+                <a data-role="button" data-theme="a" href="#" data-rel="dialog" data-transition="pop" id="btn-real-time">En linea</a>
             </td>
         </tr>
         </tbody></table>
