@@ -97,7 +97,7 @@ a:hover{
  <div id="contenido">	
 	 
 	<div>
-	<?=$this->config->item('app_name');?>. Hola <?php 	echo $this->userconfig->nombre; ?> .!!!
+	<b><?=$this->config->item('app_name');?> - Hola <?php 	echo $this->userconfig->nombre; ?> .!!!</b>
 	<hr>
 	<ul>
 

@@ -49,9 +49,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'pidataxi_aplico';
+$db['default']['username'] = 'software_rutas';
 $db['default']['password'] = '4pl1c02010';
-$db['default']['database'] = 'pidataxi_aplico';
+$db['default']['database'] = 'software_rutas';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

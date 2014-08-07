@@ -4,7 +4,6 @@ class Dashboard extends CI_Controller {
 
 
 	public function index(){
-		 
 		// load language file
 		$this->lang->load('dashboard');
 		$data['id_user'] = "user";

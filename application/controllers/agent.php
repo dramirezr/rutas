@@ -43,7 +43,7 @@ class Agent extends CI_Controller {
 		$idvehiculo = $this->agent->vehiculo;
 		if(($lat<>0) and ($lat<>0) ){ 
 			$this->agente->update($id, array('latitud' => $lat, 'longitud' => $lng, 'fecha_localizacion' => date('Y-m-d H:i:s')));
-			//$this->vehiculos->update($idvehiculo, array('latitud' => $lat, 'longitud' => $lng, 'fecha_localizacion' => date('Y-m-d H:i:s')));
+			$this->vehiculos->update($idvehiculo, array('latitud' => $lat, 'longitud' => $lng, 'fecha_localizacion' => date('Y-m-d H:i:s')));
 			die(json_encode(array('state' => 'ok')));
 		}else{
 			die(json_encode(array('state' => 'error')));
@@ -233,36 +233,37 @@ function verify_service_status(){
 		$longitud 	= $this->input->get_post('longitud');
 
 		$this->load->model('alumno');
-		$update = $this->alumno->update($id, array('estado' => $estado,'idnovedad' => $novedad));
-		if ($update==1){
-			$des_est = '';
-			switch ($estado) {
-			    case '1':
-			        $des_est = 'Entregado en casa';break;
-			    case '2':
-			        $des_est = 'En camino al colegio';break;
-			    case '3':
-			        $des_est = 'En el colegio';break;
-			    case '4':
-			        $des_est = 'De regreso a casa';break;
-			    case '5':
-			        $des_est = 'Ha ocurrido una novedad: '.$desnovedad;break;
-			}
-
-			$this->load->model('seguimiento');
-			$datos['idalumno'] 		= $id;
-			$datos['idruta'] 		= $this->agent->idruta;
-			$datos['idagente'] 		= $this->agent->id;
-			//sucursal del agente, o podria ser la sucursal del estudiante???
-			$datos['idsucursal'] 	= $this->agent->idsucursal;
-			$datos['fecha'] 		= date('Y-m-d H:i:s');
-			$datos['descripcion']	= $des_est;
-			$datos['latitud'] 		= $latitud;
-			$datos['longitud'] 		= $longitud;
-			$this->seguimiento->create($datos);
+		$this->load->model('seguimiento');
 		
-			die(json_encode(array('state' => 'ok')));
+		$des_est = '';
+		switch ($estado) {
+		    case '1':
+		        $des_est = 'Entregado en casa';break;
+		    case '2':
+		        $des_est = 'En camino al colegio';break;
+		    case '3':
+		        $des_est = 'En el colegio';break;
+		    case '4':
+		        $des_est = 'De regreso a casa';break;
+		    case '5':
+		        $des_est = 'Ha ocurrido una novedad: '.$desnovedad;break;
 		}
+
+		$datos['idalumno'] 		= $id;
+		$datos['idruta'] 		= $this->agent->idruta;
+		$datos['idagente'] 		= $this->agent->id;
+		//sucursal del agente, o podria ser la sucursal del estudiante???
+		$datos['idsucursal'] 	= $this->agent->idsucursal;
+		$datos['fecha'] 		= date('Y-m-d H:i:s');
+		$datos['descripcion']	= $des_est;
+		$datos['latitud'] 		= $latitud;
+		$datos['longitud'] 		= $longitud;
+
+		$idseguimiento 			= $this->seguimiento->create($datos);
+				
+		$update = $this->alumno->update($id, array('estado' => $estado,'idnovedad' => $novedad,'idseguimiento'=>$idseguimiento));
+		if ($update==1)
+			die(json_encode(array('state' => 'ok')));
 		else
 			die(json_encode(array('state' => '')));
 	}
@@ -274,10 +275,6 @@ function verify_service_status(){
 		$novedades = $this->novedades->get_all_sucursal($idsucursal);
 		die(json_encode(array('state' => 'ok','result' => $novedades)));
 	}
-
-
-
-
 
 
 	function close(){

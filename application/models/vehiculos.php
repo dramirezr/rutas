@@ -46,7 +46,7 @@ class Vehiculos extends CI_Model {
 
 
 	function get_vehiculo_cust($propietario){
-		$sql  = " select a.*,( CURRENT_TIMESTAMP( ) - INTERVAL 60 SECOND ) as datesytem  ";
+		$sql  = " select a.*,( CURRENT_TIMESTAMP( ) - INTERVAL 30 SECOND ) as datesytem  ";
 		$sql .= " FROM vehiculos a ";
  		$sql .= " where a.propietario = $propietario "; 
 		$result = $this->db->query($sql)->result();

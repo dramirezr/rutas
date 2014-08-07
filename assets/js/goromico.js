@@ -27,7 +27,7 @@ var markersArray = [];
 var limits = new google.maps.LatLngBounds();
 var agentMarker;
 var LocationDemonId=null;
-
+var iconMarker;
 
 $(document).ready(function() {
     if (form_view=='view_student_stop'){
@@ -157,7 +157,6 @@ function saveStop(){
 }
 
 
-var iconMarker;
 
 function selectRutas(){
        $.ajax({
@@ -539,8 +538,6 @@ function cargarMapa() {
         getIconLocation();
          
         var coorBus = new google.maps.LatLng($('input[name="latitud"]').val(),$('input[name="longitud"]').val());
-        console.log($('input[name="latitud"]').val()+'****'+$('input[name="longitud"]').val());
-        //var coorBus = new google.maps.LatLng(4.10916,-76.1889);
         iconMarkerBus = new google.maps.Marker({
             position:coorBus,
             map: map,

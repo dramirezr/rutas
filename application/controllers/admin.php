@@ -25,17 +25,6 @@ class Admin extends CI_Controller {
 	function _admin_output($output = null)
 	{
 		$this->load->view('private/admin.php',$output);	
-		/*if($this->userconfig->perfil=='ADMIN')
-			$this->load->view('private/admin.php',$output);	
-		else
-			if($this->userconfig->perfil=='CALL')
-				//$this->callService();
-				//$this->tabletCallAgent();
-				$this->load->view('private/callcenter.php',$output);	
-			else
-				if($this->userconfig->perfil=='CUST')
-					$this->showAgentCust();
-		*/
 	}
 	
 	
@@ -123,9 +112,7 @@ class Admin extends CI_Controller {
 			
 			$output = $crud->render();
 			$output -> op = 'user_management';
-			//$output -> perfil = 'ADMIN';
-			
-			
+						
 			$this->_admin_output($output);
 		}else{
 			$this->close();			
@@ -399,7 +386,7 @@ class Admin extends CI_Controller {
 			$crud->set_table('alumno');
 			$crud->set_subject('Alumnos');
 			$crud->columns('codigo','idsucursal','idgrado','nombre','idparada');
-			$crud->fields('codigo','idsucursal','idgrado','nombre','foto1','foto2','idparada');
+			$crud->fields('codigo','clave','idsucursal','idgrado','nombre','foto1','foto2','idparada');
 			$crud->display_as('idsucursal', 'Institución');
 			$crud->display_as('idgrado', 'Grado cursado');
 			
@@ -413,6 +400,11 @@ class Admin extends CI_Controller {
 			$crud->display_as('idparada', 'Punto de parada');
 			
 
+			$crud->change_field_type('clave', 'password');
+			$crud->callback_edit_field('clave',array($this,'set_password_input_to_empty'));
+    		$crud->callback_add_field('clave',array($this,'set_password_input_to_empty'));
+     		$crud->callback_before_update(array($this,'encrypt_password_callback'));
+    		$crud->callback_before_insert(array($this,'encrypt_password_callback'));
 
 			$state = $crud->getState();
 	    	$state_info = $crud->getStateInfo();

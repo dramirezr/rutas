@@ -22,6 +22,14 @@ class Seguimiento extends CI_Model {
 		return $result[0];		
 	}
 
+	function get_by_iduser($iduser){
+		$sql = " select * from seguimiento where idalumno=$iduser ";
+		$result = $this->db->query($sql)->result();
+		if(!count($result))
+			return null;
+		return $result;		
+	}
+
 	function update($id, $data){
 		return $this->db->update('seguimiento', $data, array('id' => $id));
 	}
