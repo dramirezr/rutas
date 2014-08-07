@@ -305,7 +305,7 @@ function getBusLocation(ruta){
                 setIconsBus(coordenadas, response.result[i]);
             }
 
-            if ((response.idmax!=MAX_ID_HIST)&&(response.idmax!=null){
+            if ((response.idmax!=MAX_ID_HIST)&&(response.idmax!=null)){
                 selectHistory();
                 getStateUser(iduser);
             }
