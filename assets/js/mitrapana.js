@@ -33,6 +33,7 @@ var iconMarker;
 var LocationDemonId=null;
 var scode = null;
 var iduser = null;
+var idsucursaluser = null;
 var idruta = null;
 var busLocationDemonId;
 var verification_interval = null;
@@ -82,7 +83,8 @@ function login(id, key){
         if(response.state=='ok'){
             $("#show-dashboard").trigger('click');
             var user = response.data
-            iduser = user.id;
+            iduser          = user.id;
+            idsucursaluser  = user.idsucursal;
             $('#user-photo').attr('src', "../assets/images/students/" + user.foto1) ;
             //$('#user-sucursal').html(user.sucursal);
             $('#user-nombre').html(user.nombre);
@@ -144,6 +146,38 @@ function selectHistory(){
         });
 }
 
+function getOfficeLocation(idsucursal){
+    $.ajax({
+        type : "GET",
+        url : server + 'api/get_office_location',     
+        dataType : "json",
+        data : {
+            cachehora : (new Date()).getTime(),
+            idsucursal  : idsucursal
+        }
+        
+    }).done(function(response){
+        var coordenadas;
+        if(response.state == 'ok'){
+            coordenadas =  new google.maps.LatLng( response.result.latitud, response.result.longitud);
+            setOfficeIcons(coordenadas);
+        }
+    });
+  
+}
+
+var iconOffice;
+function setOfficeIcons(coordenadas){
+    if(iconOffice)
+        iconOffice.setMap(null);
+    iconOffice = new google.maps.Marker({
+            position:coordenadas,
+            map: map,
+            icon : '../assets/images/colegio.png'
+    });
+    iconOffice.setMap(map);
+}
+
 
 function getIconLocation(){
     var elemento = iduser;
@@ -175,6 +209,8 @@ function getIconLocation(){
                 clearInterval(busLocationDemonId);
                 busLocationDemonId = setInterval("getBusLocation("+idruta+")", verification_interval);
             }
+
+            getOfficeLocation(idsucursaluser);
 
         }
     });

@@ -66,7 +66,6 @@ function initStudentStop(){
             var coordenadas;
             coordenadas = map.getCenter();
             var result = {idparada:"-1", idalumno:$('#select-allalumnos').val(), nombre:getSelectedText('select-allalumnos'), telefono:"", direccion:"", idruta:"-1", descripcion:""}; 
-            console.log('result:'+result);
             setIcons(coordenadas, result);    
         }
     });
@@ -101,6 +100,8 @@ function getSelectedText(elementId) {
     return elt.options[elt.selectedIndex].text;
 }
 
+
+
 function deleteStop(){
        $.ajax({
             type : "GET",
@@ -117,14 +118,15 @@ function deleteStop(){
                 //refrescar paradas.
                 getIconLocation();
             }else{
-                alert('ERROR al intentar grabar el punto de parada. Por favor intente de nuevo.');                
+                alert('ERROR al intentar borrar el punto de parada. Por favor intente de nuevo.');                
             }
         });
        
 }
 
+
 function saveStop(){
-       
+      
        $.ajax({
             type : "GET",
             url : lang + '../../../api/saveStop',        
@@ -144,17 +146,29 @@ function saveStop(){
             }
         }).done(function(response){
             if(response.state == 'ok'){
-                if (form_view=='view_student_stop')
+                if (form_view=='view_student_stop'){
                     getIconLocation();
-                else
-                    if (form_view=='view_way_stop')
+                    //cierra despues de grabar para cambiar el efecto del color cuando es la parada principal
+                    //$("#det-parada-modal").dialog('close');
+                }else{
+                    if (form_view=='view_way_stop'){
                         getIconLocationWay();
+                        $("#det-parada-modal").dialog('close');
+                    }
+                }
+                //$("#det-parada-modal").dialog('close');
             }else{
-                alert('ERROR al intentar grabar el punto de parada. Por favor intente de nuevo.');                
+                if (response.state == 'error_max_seats'){
+                    alert('ERROR, la ruta de BUS no cuenta con asientos disponibles. Por favor cambien de ruta.');                
+                }
             }
-        });
+
+        }).fail(function(jqXHR, textStatus, errorThrown){
+         console.log('Error:'+errorThrown);
+      }); 
        
 }
+
 
 
 
@@ -170,18 +184,13 @@ function selectRutas(){
     
             var html = '';
             if(response.state == 'ok'){
-                
-                html = '<select name="select-allrutas" id="select-allrutas">';
-
-                html = html + '<option value="-1">...</option>';
+                html = '<option value="-1">...</option>';
                 for(var i in response.rutas){
                     html = html + '<option value=' + response.rutas[i].id + '>' + response.rutas[i].nombre + '</option>';
                 }
-                html = html + '</select>';
             }
 
-            $('#select-rutas').html(html);
-
+            $('#select-allrutas').html(html);
         });
        
 }
@@ -282,7 +291,7 @@ function deleteOverlays() {
 
 function getIconLocation(){
     var elemento = $('#select-allalumnos').val();
-    console.log('alumno:'+elemento); 
+    
     $.ajax({
         type : "GET",
         url : lang + '../../../api/get_stop_location',        
@@ -297,8 +306,9 @@ function getIconLocation(){
 
         if(response.state == 'ok'){
             var coordenadas;
+
             deleteOverlays();
-            map.setCenter(new google.maps.LatLng( 0, 0 ));
+            //map.setCenter(new google.maps.LatLng( 0, 0 ));
             var bounds = new google.maps.LatLngBounds();
             for(var i in response.result){
                 coordenadas =  new google.maps.LatLng( response.result[i].latitud, response.result[i].longitud);
@@ -306,8 +316,31 @@ function getIconLocation(){
                
                 bounds.extend(coordenadas);
             }
-            map.setCenter(bounds.getCenter());
 
+            getOfficeLocation(response.result[0].idsucursal);
+
+            map.setCenter(bounds.getCenter());
+            $("#det-parada-modal").dialog('close');
+        }
+    });
+  
+}
+
+function getOfficeLocation(idsucursal){
+    $.ajax({
+        type : "GET",
+        url : lang + '../../../api/get_office_location',        
+        dataType : "json",
+        data : {
+            cachehora : (new Date()).getTime(),
+            idsucursal  : idsucursal
+        }
+        
+    }).done(function(response){
+        var coordenadas;
+        if(response.state == 'ok'){
+            coordenadas =  new google.maps.LatLng( response.result.latitud, response.result.longitud);
+            setOfficeIcons(coordenadas)
         }
     });
   
@@ -319,7 +352,7 @@ function getIconLocationWay(){
     var idruta = $('#select-allrutas-p').val();  
     clearInterval(LocationDemonId);
     if(idruta>0){
-        LocationDemonId = setInterval(getIconLocationWay, 15000);
+        LocationDemonId = setInterval(getIconLocationWay, verification_interval);
     
         $.ajax({
             type : "GET",
@@ -340,6 +373,9 @@ function getIconLocationWay(){
                     setIcons(coordenadas, response.result[i]);
                     bounds.extend(coordenadas);
                 }
+
+                getOfficeLocation(response.result[0].idsucursal);
+
                 getBusLocation(idruta,bounds);
             }
         });
@@ -397,6 +433,23 @@ function setIconsBus(coordenadas, result){
                
 }
 
+function setOfficeIcons(coordenadas){
+    iconMarker = new google.maps.Marker({
+            position:coordenadas,
+            map: map,
+            icon : '/assets/images/colegio.png'
+    });
+    markersArray.push(iconMarker);
+}
+
+
+
+function setOptionValue(value){
+    var myselect = $("#select-allrutas");
+    myselect.val(value).attr('selected', true).siblings('option').removeAttr('selected');
+    myselect.selectmenu();
+    myselect.selectmenu("refresh", true);
+}
 
 function setIcons(coordenadas, result){
     //if (result.idalumno!="-1"){
@@ -422,7 +475,7 @@ function setIcons(coordenadas, result){
             //animation: google.maps.Animation.DROP, 
             draggable: true,
             icon : icon_casa,
-            title : result.nombre+' - '+result.direccion +' - '+result.telefono+' - '+result.descripcion
+            title : result.orden_parada+'. '+result.nombre+' - '+result.direccion +' - '+result.telefono+' - '+result.descripcion
         });
         markersArray.push(iconMarker);
                 
@@ -434,21 +487,19 @@ function setIcons(coordenadas, result){
             //$('#longitud').val(result.longitud);
             $('#latitud').val(evento.latLng.lat());
             $('#longitud').val(evento.latLng.lng());
-
             $('#nombre').val(result.nombre);
-            
             $('#telefono').val(result.telefono);
-            
             $('#direccion').val(result.direccion);
-            $('#select-allrutas').val(result.idruta);
+            setOptionValue(result.idruta);
+
             $('#descripcion').val(result.descripcion);
             $('#orden_parada').val(result.orden_parada);
             
             $("input[name='chk-principal']").checkboxradio();
             if(result.codparada==result.idparada)
-                 $('input[name="chk-principal"]').prop("checked", true).checkboxradio('refresh');
+                $('input[name="chk-principal"]').prop("checked", true).checkboxradio('refresh');
             else
-                 $('input[name="chk-principal"]').prop("checked", false).checkboxradio('refresh');
+                $('input[name="chk-principal"]').prop("checked", false).checkboxradio('refresh');
              
            
             codeLatLng(evento.latLng.lat(), evento.latLng.lng());
@@ -503,7 +554,7 @@ function errores(err) {
  
 
 function address_search() {
- var address = 'quito';
+ var address;
  geocoder.geocode( { 'address': address}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
                 

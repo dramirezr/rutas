@@ -7,18 +7,16 @@
  
 	<title><?= $this->config->item('app_name') ?></title>
 
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
-	<link rel="stylesheet" href="<?=base_url()?>assets/css/app.css" />
-	
-	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3&sensor=true"></script> 
-    
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script> 
+    <link rel="stylesheet" href="<?=base_url()?>assets/css/app.css" />
+    <link rel="stylesheet" href="<?=base_url()?>assets/css/jquery.mobile-1.3.2.min.css" />
+    <script src="<?=base_url()?>assets/js/jquery-1.10.2.min.js"></script>
+    <script src="<?=base_url()?>assets/js/jquery.mobile-1.3.2.min.js"></script>    
     <script src="<?=base_url()?>assets/js/goromico.js"></script>
     
   	<script>
  		var lang = '<?=current_lang()?>';
- 		
+ 		var verification_interval = <?=ci_config('verification_interval')?>;
         var form_view = 'view_student_stop';
  	</script>
 </head>
@@ -28,8 +26,6 @@
 <div data-role="page" id="page-ini">
 
     <div data-theme="b" data-role="header">
-
-       
         <div data-role="fieldcontain">
             
             <table border=0 width="70%"><tbody>
@@ -79,17 +75,19 @@
             <input name="descripcion" id="descripcion" placeholder="" value="" type="text">
             <label for="telefono">Teléfono:</label>
             <input name="telefono" id="telefono" placeholder="" value="" type="text">
-            <label for="select-rutas">Ruta:</label>
-            <span id="select-rutas"></span>
+            <label for="select-allrutas">Ruta:</label>
+            <select name="select-allrutas" id="select-allrutas"></select>
             <input type="checkbox" name="chk-principal" id="chk-principal" class="custom" />
             <label for="chk-principal">Parada principal</label>
             
         </div>
         
         <p>
-            <a href="#" data-role="button" data-mini="true" data-inline="true" id="btn-save-stop" data-rel="back" >Grabar y regresar</a>
+            <a href="#" data-role="button" data-mini="true" data-inline="true" id="btn-save-stop" >Grabar y regresar</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
             <a href="#" data-role="button" data-mini="true" data-inline="true" id="btn-open-dialog-delete">Borrar</a>
-            <a href="#page-ini" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-cancel-stop">Regresar</a>
+      <!--      <a href="#" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-cancel-stop">Regresar</a>
+            -->
         </p>
 </div><!-- /page popup -->
 
@@ -101,6 +99,14 @@
             <a href="#page-ini" data-role="button" id="btn-delete-stop" >Si</a>
             <a href="#det-parada-modal" data-role="button" data-rel="back">No</a>
         </article>
-    </div>
+</div>
+
+<div id="dialog-seats" data-role="page"  >
+        <!-- icono para cerrar esto da una apariencia mas estilizada -->
+        <article data-role="content">
+            <h2>ERROR, la ruta de BUS no cuenta con asientos disponibles. Por favor cambien de ruta.</h2>
+        </article>
+</div>
+
 </body>
 </html>

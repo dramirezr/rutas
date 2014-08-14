@@ -7,17 +7,16 @@
  
 	<title><?= $this->config->item('app_name') ?></title>
 
-	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
 	<link rel="stylesheet" href="<?=base_url()?>assets/css/app.css" />
-	
-	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> 
-    
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script> 
+    <link rel="stylesheet" href="<?=base_url()?>assets/css/jquery.mobile-1.3.2.min.css" />
+    <script src="<?=base_url()?>assets/js/jquery-1.10.2.min.js"></script>
+    <script src="<?=base_url()?>assets/js/jquery.mobile-1.3.2.min.js"></script>
     <script src="<?=base_url()?>assets/js/goromico.js"></script>
     
   	<script>
  		var lang = '<?=current_lang()?>';
+        var verification_interval = <?=ci_config('verification_interval')?>;
  	    var form_view = 'view_way_stop';
  	</script>
 </head>
@@ -28,20 +27,12 @@
 <div data-role="page" id="page-ini">
 
     <div data-theme="b" data-role="header">
-
-       
         <div data-role="fieldcontain">
-            
             <table border=0 width="70%"><tbody>
                 <tr><td >
                     <label for="select-rutas-p" class="select">Ruta:</label>
                     <span id="select-rutas-p"></span>
                     <a href="#" id='btn-search-ruta'  align="left" data-role="button" data-icon="search" data-iconpos="notext" data-theme="c" data-inline="true">Buscar</a>
-                </td><td >
-                  
-                </td>
-                <td >
-                                        
                 </td>
                 </tr>
                 </tbody>
@@ -79,16 +70,17 @@
             <label for="telefono">Teléfono:</label>
             <input name="telefono" id="telefono" placeholder="" value="" type="text">
             <label for="orden_parada">Orden de parada:</label>
-            <input name="orden_parada" id="orden_parada" placeholder="" value="" type="text">
-            <label for="select-rutas">Ruta:</label>
-            <span id="select-rutas"></span>
+            <input name="orden_parada" id="orden_parada" placeholder="" value="" pattern="[0-9]*" type="number">
+            <label for="select-allrutas">Ruta:</label>
+            <select name="select-allrutas" id="select-allrutas"></select>
             
         </div>
         
         <p>
-            <a href="#" data-role="button" data-mini="true" data-inline="true" id="btn-save-stop" data-rel="back" >Grabar y regresar</a>
-            
-            <a href="#page-ini" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-cancel-stop">Regresar</a>
+            <a href="#" data-role="button" data-mini="true" data-inline="true" id="btn-save-stop" >Grabar y regresar</a>
+           <!-- 
+           <a href="#" data-role="button" data-mini="true" data-inline="true" data-rel="back" id="btn-cancel-stop">Regresar</a>
+           -->
         </p>
 </div><!-- /page popup -->
 

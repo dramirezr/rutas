@@ -21,7 +21,7 @@ class Agente extends CI_Model {
 		return $agente[0];		
 	}
 
-	function get_by_cust_id($id,$perfil,$idsucursal){
+	function get_by_cust_id($idsuc, $id,$perfil,$idsucursal){
 		
 		$sql = " select a.nombre, a.telefono, a.foto, a.latitud, a.longitud, a.estado_servicio, a.fecha_localizacion, v.placa, a.fecha_localizacion , ( CURRENT_TIMESTAMP( ) - INTERVAL 60 SECOND ) as datesytem ";
 		$sql .= " from vehiculos v, agente a";
@@ -33,12 +33,12 @@ class Agente extends CI_Model {
 		$sql .= "    on a.vehiculo = R.vehiculo";
 		$sql .= "    and a.fecha_localizacion = R.max_fecha";
 		if ($perfil=='ADMIN')
-			$sql .= " where v.id=a.vehiculo"; 
+			$sql .= " where v.id=a.vehiculo and v.idsucursal = $idsuc "; 
 		if ($perfil=='CUST')
 			$sql .= " where v.propietario = $id and v.id=a.vehiculo"; 
 		if ($perfil=='CALL')
 			$sql .= " where v.idsucursal = $idsucursal and v.id=a.vehiculo"; 
-		
+		//echo $sql;
 		$agente = $this->db->query($sql)->result();
 		if(!count($agente))
 			return null;
@@ -53,7 +53,7 @@ class Agente extends CI_Model {
 		
 		$pass = md5($pass);
 		//$agente = $this->db->get_where('agente', array('codigo' => $code, 'clave' => $pass))->result();
-		$sql  = " SELECT a.*,v.placa,u.id as idruta, u.nombre as nombreruta ";
+		$sql  = " SELECT a.*,v.placa,u.id as idruta, u.nombre as nombreruta, u.idsucursal as sucursalruta ";
 		$sql .= " FROM agente a  ";
 		$sql .= " inner join vehiculos v on(a.vehiculo=v.id) ";
 		$sql .= " inner join usuarios u on(v.propietario=u.id) ";

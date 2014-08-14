@@ -27,7 +27,7 @@ class Alumno extends CI_Model {
 	
 	function get_for_login($code, $pass){
 		$pass = md5($pass);
-		$sql = 	" SELECT a.id,a.codigo,a.nombre,a.foto1,s.fecha, s.descripcion as estado ";
+		$sql = 	" SELECT a.idsucursal, a.id,a.codigo,a.nombre,a.foto1,s.fecha, s.descripcion as estado ";
 		$sql .= " FROM alumno a ";
 		$sql .= " left join seguimiento s on(a.idseguimiento=s.id) ";
 		$sql .= " where a.codigo = '$code' and clave='$pass' "; 
@@ -61,6 +61,28 @@ class Alumno extends CI_Model {
 			return null;
 		return $result[0];		
 	}
+
+	function get_puestos_ruta($ruta){
+		$sql  = " SELECT sum(puestos) as num ";
+		$sql .= " FROM vehiculos  "; 
+ 		$sql .= " WHERE propietario = $ruta ";
+ 		$result = $this->db->query($sql)->result();
+		if(!count($result))
+			return null;
+		return $result[0];		
+	}	
+
+	function get_alumnos_ruta($alumno,$idruta){
+		$sql  = " select count(a.id) as num ";
+		$sql .= " FROM paradas b, alumno a ";
+ 		$sql .= " where b.idruta = $idruta and b.idalumno <> $alumno and b.id = a.idparada "; 
+ 		$result = $this->db->query($sql)->result();
+		if(!count($result))
+			return null;
+		return $result[0];		
+	}
+
+
 
 	
 }

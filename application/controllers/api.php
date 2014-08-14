@@ -16,7 +16,7 @@ class Api extends CI_Controller {
 				
 		$queryId = $this->solicitud->create($data);
 		
-		die(json_encode(array('state' => 'ok', 'queryId' => $queryId)) );
+		die(json_encode(array('state' => 'ok', 'queryId' => $queryId)));
 	}
 	
 	function verify_service_status(){
@@ -164,14 +164,22 @@ class Api extends CI_Controller {
 	function get_agets_location(){
 		$this->load->model('agente');
 		$userconfig = $this->session->userdata('userconfig');
+		$idsucursal = $this->input->get_post('idsucursal');
 		$cust_id = $userconfig->id;
 		$cust_perfil = $userconfig->perfil;
 		$cust_idsucursal = $userconfig->idsucursal;
-		$agente = $this->agente->get_by_cust_id($cust_id,$cust_perfil,$cust_idsucursal);
+		$agente = $this->agente->get_by_cust_id($idsucursal,$cust_id,$cust_perfil,$cust_idsucursal);
 		
 		die(json_encode(array('state' => 'ok','agent' => $agente)));
 	}
 	
+	function get_office_location(){
+		$this->load->model('sqlexteded');
+	    $idsucursal = $this->input->get_post('idsucursal');
+	    $sucursal   = $this->sqlexteded->getLatLngOficce($idsucursal);
+		die(json_encode(array('state' => 'ok','result' => $sucursal)));
+	}
+
 	function get_stop_location(){
 		$this->load->model('paradas');
 		$userconfig = $this->session->userdata('userconfig');
@@ -183,6 +191,7 @@ class Api extends CI_Controller {
 		
 		die(json_encode(array('state' => 'ok','idalumno' =>$idalumno,'result' => $paradas)));
 	}	
+
 
 	function get_stop_location_way(){
 		$this->load->model('paradas');
@@ -221,6 +230,17 @@ class Api extends CI_Controller {
 		die(json_encode(array('state' => 'ok', 'rutas' => $rutas)));
 	}
 
+	function select_sucursales(){
+		$this->load->model('sqlexteded');
+		$userconfig 		= $this->session->userdata('userconfig');
+		$cust_id 			= $userconfig->id;
+		$cust_perfil 		= $userconfig->perfil;
+		$cust_idsucursal 	= $userconfig->idsucursal;
+		$result = $this->sqlexteded->get_all_sucursal($cust_perfil,$cust_idsucursal);
+				
+		die(json_encode(array('state' => 'ok', 'result' => $result)));
+	}
+
 	function select_vehicle(){
 		$this->load->model('vehiculos');
 		$idruta = $this->input->get_post('idruta');
@@ -244,20 +264,37 @@ class Api extends CI_Controller {
         $data['descripcion'] 	= $this->input->get_post('descripcion');
 		$principal			 	= $this->input->get_post('principal');
 		
+		
+		if ($principal=='true'){
+			$this->load->model('alumno');
+			//validar que existan los asientos antes de cambiarle la ruta al niño
+			$num_puestos = $this->alumno->get_puestos_ruta($data['idruta']);
+			$num_alumnos = $this->alumno->get_alumnos_ruta($data['idalumno'] ,$data['idruta']);
+			
+			if ($num_alumnos->num < $num_puestos->num){
+				if ($id=='-1'){
+					$queryId = $this->paradas->create($data);
+				}else{
+					$this->paradas->update($id,$data);
+					$queryId = $id;
+				}
+
+				$pto_principal['idparada']=$queryId;
+				$this->alumno->update($data['idalumno'],$pto_principal);
+				die(json_encode(array('state' => 'ok', 'queryId' => $queryId, 'users' => $num_alumnos->num,'seats' => $num_puestos->num)));
+
+			}else{
+				die(json_encode(array('state' => 'error_max_seats','users' => $num_alumnos->num,'seats' => $num_puestos->num)) );		
+			}
+		}
+		
 		if ($id=='-1'){
 			$queryId = $this->paradas->create($data);
 		}else{
 			$this->paradas->update($id,$data);
 			$queryId = $id;
 		}
-		
-		if ($principal=='true'){
-			$this->load->model('alumno');
-			$pto_principal['idparada']=$id;
-			$this->alumno->update($data['idalumno'],$pto_principal);
-		}
 
-		
 		die(json_encode(array('state' => 'ok', 'queryId' => $queryId)) );
 	}
 

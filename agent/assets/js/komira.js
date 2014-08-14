@@ -52,9 +52,7 @@ var map;
 var markersArray = [];
 var agentMarker;
 var novedadesArray = [];
-//var latitud;
-//var longitud;
-//var geocoder = new google.maps.Geocoder();
+var idsucursalruta;
 
 
 $(document).ready(function() {
@@ -157,6 +155,7 @@ function closeApp(){
 
 }    
 
+
 function login(id, key){
     clearInterval(localizationDemonId);
 	clearInterval(verifyServiceDemonId);
@@ -186,6 +185,8 @@ function login(id, key){
 			updateLocation();
 			localizationDemonId = setInterval(localizame, verification_interval);
             updateLocationDemonId = setInterval(updateLocation, verification_interval);
+            
+            idsucursalruta = user.sucursalruta;
             
         }else{
             alert(response.msg);
@@ -257,12 +258,12 @@ function cargarMapa() {
 
     };/* HYBRID  Configuramos una serie de opciones como el zoom del mapa y el tipo.*/
     map = new google.maps.Map($("#map_canvas").get(0), myOptions); /*Creamos el mapa y lo situamos en su capa */
-
+    //pinta el colegio de la sucursal.
+    getOfficeLocation(idsucursalruta);  
 }
 
 
 function getBusLocation(){
-    console.log('...getBusLocation');
     deleteOverlaysBus() ;
     agentMarker = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
@@ -307,10 +308,40 @@ function deleteOverlaysBus() {
         agentMarker = null;
     }
 }
-//if(agentMarker){
-         //   agentMarker.setMap(null);
-         //   agentMarker = null;
-        //}
+
+function getOfficeLocation(idsucursal){
+    $.ajax({
+        type : "GET",
+        url : server + 'api/get_office_location',        
+        dataType : "json",
+        data : {
+            cachehora : (new Date()).getTime(),
+            idsucursal  : idsucursal
+        }
+        
+    }).done(function(response){
+        var coordenadas;
+        if(response.state == 'ok'){
+            coordenadas =  new google.maps.LatLng( response.result.latitud, response.result.longitud);
+            setOfficeIcons(coordenadas);
+        }
+    });
+  
+}
+
+var iconOffice;
+function setOfficeIcons(coordenadas){
+    if(iconOffice)
+        iconOffice.setMap(null);
+    iconOffice = new google.maps.Marker({
+            position:coordenadas,
+            map: map,
+            icon : 'assets/images/colegio.png'
+    });
+    iconOffice.setMap(map);
+}
+
+
 function getStudentStop(){
     $.ajax({
         type : "GET",

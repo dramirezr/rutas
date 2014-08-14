@@ -125,17 +125,49 @@ class Admin extends CI_Controller {
 	
 			$crud = new grocery_CRUD();
 
+			$this->load->library('googlemaps');
+
 			$crud->set_theme('datatables');
 			$crud->set_table('sucursales');
 			$crud->set_subject('Institución');
 			$crud->columns('nombre');
-			$crud->fields('nombre');
+			$crud->fields('nombre','latitud','longitud');
 			$crud->required_fields('nombre');
 			$crud->display_as('nombre', 'Nombre institución');
 			
 			$output = $crud->render();
 			$output -> op = 'office_management';
-		
+
+			$state = $crud->getState();
+	    	$state_info = $crud->getStateInfo();
+	 		$primary_key='-1';
+	    	if($state == 'edit')
+	    	{
+	        	$this->load->model('sqlexteded');
+	        	$primary_key = $state_info->primary_key;
+	        	$sucursal = $this->sqlexteded->getLatLngOficce($primary_key);
+	        	$config['center'] =  $sucursal->latitud.', '.$sucursal->longitud; 
+				$config['zoom'] = '14';
+				$config['map_width'] = '98%';
+				
+				//$config['onclick'] = 'alert(\'You just clicked at: \' + event.latLng.lat() + \', \' + event.latLng.lng());';
+				$this->googlemaps->initialize($config);
+				
+				$marker = array();
+				$marker['position']		= $config['center'];
+				$marker['draggable']	= TRUE;
+				$marker['animation']	= 'DROP';
+				$marker['icon']		 	=  base_url() . 'assets/images/colegio.png';	
+				$marker['ondragend'] 	= "$('#field-latitud').val(event.latLng.lat()); $('#field-longitud').val(event.latLng.lng());";
+				$this->googlemaps->add_marker($marker);
+
+				$output->map = $this->googlemaps->create_map();
+			
+	        	
+	    	}
+	    	$output->state = $state;
+	    	$output->primary_key = $primary_key;
+
 			$this->_admin_output($output);
 		
 		}else{
@@ -247,9 +279,10 @@ class Admin extends CI_Controller {
 			$crud->set_theme('datatables');
 			$crud->set_table('vehiculos');
 			$crud->set_subject('Vehiculos');
-			$crud->columns('placa','idsucursal','propietario','modelo','marca');
-			$crud->fields('placa','idsucursal','propietario','modelo','marca');
+			$crud->columns('idsucursal','placa','propietario','modelo','marca');
+			$crud->fields('idsucursal','placa','propietario','modelo','marca','puestos');
 			$crud->display_as('idsucursal', 'Institución');
+			$crud->display_as('puestos', 'Número de puestos');
 			$crud->display_as('propietario', 'Ruta');
 			$crud->required_fields('idsucursal','placa','propietario');
 

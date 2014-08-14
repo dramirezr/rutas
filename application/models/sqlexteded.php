@@ -19,6 +19,29 @@ class Sqlexteded extends CI_Model {
 		return $service;	
 	}
 
+	function get_all_sucursal($perfil,$idsucursal){
+		$sql = 	" SELECT * ";
+		$sql .= " FROM sucursales ";
+ 		if ($perfil!='ADMIN')
+			$sql .= " where id = $idsucursal "; 
+		$result = $this->db->query($sql)->result();
+		if(!$result)
+			return null;
+		return $result; 
+	
+	}
+
+	function getLatLngOficce($primary_key){
+		$sql = 	" SELECT latitud, longitud ";
+		$sql .= " FROM sucursales ";
+ 		$sql .= " WHERE id = $primary_key ";
+		$result = $this->db->query($sql)->result();
+		if(!$result)
+			return null;
+		return $result[0]; 
+	
+	}
+
 	
 		
 }

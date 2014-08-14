@@ -25,15 +25,18 @@ var longitud;
 var geocoder = new google.maps.Geocoder();
 var markersArray = [];
 var limits = new google.maps.LatLngBounds();
+var iconMarker;
 
 $(document).ready(function() {
-   localizame(); /*Cuando cargue la pÃ¡gina, cargamos nuestra posiciÃ³n*/ 
-   //address_search();
-   
+   localizame(); 
+   selectSucursales();
+   $('#btn-search').click(function(e){
+        getIcons($('#select-allsucursales').val());
+    });
 });
 
 var taxiLocationDemonId;
-var taxiMarker;
+var busMarker;
    
 function validarEnter(e) {
     if (window.event) {
@@ -48,37 +51,29 @@ function validarEnter(e) {
     } 
 }
 
-var flag='';
-function getTaxiLocation(){
-   $.ajax({
-        type : "GET",
-        url : lang + '../../../api/get_agets_location',        
-        dataType : "json"
-    }).done(function(response){
 
-        if(response.state == 'ok'){
-            var coordenadas;
-            var estadoagent;
-            deleteOverlays();
-            var bounds = new google.maps.LatLngBounds();
-            for(var i in response.agent){
-                if(response.agent[i].fecha_localizacion>response.agent[i].datesytem)
-                    estadoagent = 0
-                else
-                    estadoagent = 1
-                coordenadas =  new google.maps.LatLng( response.agent[i].latitud, response.agent[i].longitud);
-                setTaxiIcon(coordenadas, response.agent[i],estadoagent );
-                bounds.extend(coordenadas);
+function selectSucursales(){
+       $.ajax({
+            type : "GET",
+            url : lang + '../../../api/select_sucursales',        
+            dataType : "json",
+            data : {
+                    cachehora : (new Date()).getTime()
             }
-
-            if (flag!='1'){
-                map.setCenter(bounds.getCenter());   
-                map.fitBounds(bounds);
+        }).done(function(response){
+            var html = '';
+            if(response.state == 'ok'){
+                html = '<select name="select-allsucursales" id="select-allsucursales" onchange="getIcons($(this).val());" >';
+                html =  html + '<option value="-1">...</option>';
+                for(var i in response.result){
+                    html = html + '<option value="' + response.result[i].id + '" >' + response.result[i].nombre + '</option>';
+                }
+                html = html + '</select>';
             }
-            flag='1';
-        }
-    });
-   
+            $('#select-sucursales').html(html);
+         }).fail(function(jqXHR, textStatus, errorThrown){
+         console.log('Error:'+errorThrown);
+      }); 
 }
 
 function clearOverlays() {
@@ -107,7 +102,82 @@ function deleteOverlays() {
   }
 }
 
-function setTaxiIcon(coordenadas, agent, estadoagent){
+
+var flag='';
+function getBusLocation(idsucursal){
+    
+    $.ajax({
+        type : "GET",
+        url : lang + '../../../api/get_agets_location',        
+        dataType : "json",
+        data : {
+            cachehora : (new Date()).getTime(),
+            idsucursal : idsucursal
+        }
+    }).done(function(response){
+
+        if(response.state == 'ok'){
+            var coordenadas;
+            var estadoagent;
+            deleteOverlays();
+            var bounds = new google.maps.LatLngBounds();
+            for(var i in response.agent){
+                if(response.agent[i].fecha_localizacion>response.agent[i].datesytem)
+                    estadoagent = 0
+                else
+                    estadoagent = 1
+                coordenadas =  new google.maps.LatLng( response.agent[i].latitud, response.agent[i].longitud);
+                setBusIcon(coordenadas, response.agent[i],estadoagent );
+                bounds.extend(coordenadas);
+            }
+
+            if (flag!='1'){
+                map.setCenter(bounds.getCenter());   
+                map.fitBounds(bounds);
+            }
+            flag='1';
+
+        }
+     }).fail(function(jqXHR, textStatus, errorThrown){
+         console.log('Error:'+errorThrown);
+      }); 
+   
+}
+
+function getOfficeLocation(idsucursal){
+    $.ajax({
+        type : "GET",
+        url : lang + '../../../api/get_office_location',        
+        dataType : "json",
+        data : {
+            cachehora : (new Date()).getTime(),
+            idsucursal  : idsucursal
+        }
+        
+    }).done(function(response){
+        var coordenadas;
+        if(response.state == 'ok'){
+            coordenadas =  new google.maps.LatLng( response.result.latitud, response.result.longitud);
+            setOfficeIcons(coordenadas);
+        }
+    });
+  
+}
+
+function setOfficeIcons(coordenadas){
+    if(iconMarker)
+        iconMarker.setMap(null);
+    iconMarker = new google.maps.Marker({
+            position:coordenadas,
+            map: map,
+            icon : '/assets/images/colegio.png'
+    });
+   
+    iconMarker.setMap(map);
+}
+
+
+function setBusIcon(coordenadas, agent, estadoagent){
     var popup;
     var icon_taxi
    
@@ -116,14 +186,14 @@ function setTaxiIcon(coordenadas, agent, estadoagent){
     else
         icon_taxi =  '/assets/images/bus.png';
 
-    taxiMarker = new google.maps.Marker({
+    busMarker = new google.maps.Marker({
         position:coordenadas,
         map: map,
         icon : icon_taxi
     });
-    markersArray.push(taxiMarker);
+    markersArray.push(busMarker);
             
-    google.maps.event.addListener(taxiMarker, 'click', function(){
+    google.maps.event.addListener(busMarker, 'click', function(){
             if(!popup){
                 popup = new google.maps.InfoWindow();
             }
@@ -190,6 +260,16 @@ function address_search() {
  });
 }
 
+function getIcons(idsucursal){
+    flag='';
+    clearInterval(taxiLocationDemonId);
+    taxiLocationDemonId = setInterval(function() { getBusLocation(idsucursal); }, verification_interval);
+    getBusLocation(idsucursal);
+    getOfficeLocation(idsucursal)
+
+}
+
+
 function cargarMapa() {
     var latlon = new google.maps.LatLng(latitud,longitud); /* Creamos un punto con nuestras coordenadas */
     var myOptions = {
@@ -203,12 +283,6 @@ function cargarMapa() {
     };/* HYBRID  Configuramos una serie de opciones como el zoom del mapa y el tipo.*/
 
     map = new google.maps.Map($("#map_canvas").get(0), myOptions); /*Creamos el mapa y lo situamos en su capa */
-
-    clearInterval(taxiLocationDemonId);
-    taxiLocationDemonId = setInterval(getTaxiLocation, 15000);
-    getTaxiLocation();
-
-   // map.fitBounds(limits);
 
 }
 

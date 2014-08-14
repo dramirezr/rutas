@@ -16,21 +16,7 @@ foreach($css_files as $file): ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	
 	<title><?= $this->config->item('app_name') ?></title>
-	<script type="text/javascript">
-		function mostrarVentana()
-		{
-		    var ventana = document.getElementById('miVentana'); // Accedemos al contenedor
-		    ventana.style.marginTop = "100px"; // Definimos su posición vertical. La ponemos fija para simplificar el código
-		    ventana.style.marginLeft = ((document.body.clientWidth-350) / 2) +  "px"; // Definimos su posición horizontal
-		    ventana.style.display = 'block'; // Y lo hacemos visible
-		}
-
-		function ocultarVentana()
-		{
-		    var ventana = document.getElementById('miVentana'); // Accedemos al contenedor
-		    ventana.style.display = 'none'; // Y lo hacemos invisible
-		}
-	</script>
+	
 <style type="text/css">
 
 body{font-family: Arial,sans-serif;color:#333;}
@@ -84,6 +70,9 @@ a:hover{
 }
 </style>
 
+   <?php if( ($op=="office_management") ){ 
+ 			echo $map['js'];
+    } ?>
 </head>
 <body>
 <!--
@@ -168,22 +157,19 @@ a:hover{
 				echo $output; 
 
 		?>
+
+    <?php 
+    	if( ($op=="office_management") ){ 
+    		if( ($state=="edit") ){
+ 				//echo "<div id='map_canvas'>". $map['html']."</div>";
+ 				echo "<div>". $map['html']."</div>";
+
+ 			}
+    	} 
+    ?>
+
 	
     </div>
-
-    <div id="miVentana" style="position: fixed; width: 350px; height: 350px; top: 0; left: 0; font-family:Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: normal; border: #333333 3px solid; background-color: #FAFAFA; color: #000000; display:none;">
- 		<div style="font-weight: bold; text-align: left; color: #FFFFFF; padding: 5px; background-color:#006394">Título de la ventana</div>
- 		<?php 
- 		echo "hola mundo...".$op;
- 		if( ($op=="stops_tracking") )
-			{
-				echo $url = site_url('').'/'.$url;
-				echo "<iframe id='targetFrame' src='$url' width='100%' height='700px'  frameborder='0' ></iframe>";
-			}
-		?>
-  		<div style="padding: 10px; background-color: #F0F0F0; text-align: center; margin-top: 44px;"><input id="btnAceptar" onclick="ocultarVentana();" name="btnAceptar" size="20" type="button" value="Aceptar" />
- 		</div>
-	</div>  
 
 
 </div>
