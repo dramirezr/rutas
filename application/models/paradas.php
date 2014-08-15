@@ -57,7 +57,7 @@ class Paradas extends CI_Model {
 		$sql .= " FROM paradas b ";
  		$sql .= " INNER JOIN alumno a ON (b.idruta =$idruta and b.id = a.idparada )  ";
  		$sql .= " INNER JOIN usuarios u ON (u.id =$idruta and u.perfil = 'CUST' )  ";
- 		$sql .= " INNER JOIN seguimiento s ON (a.idseguimiento = s.id )  ";
+ 		$sql .= " LEFT JOIN seguimiento s ON (a.idseguimiento = s.id )  ";
  		
  		if ($perfil=='CUST')
 			$sql .= " where b.idruta = $id"; 
