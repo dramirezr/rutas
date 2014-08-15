@@ -153,10 +153,10 @@ function saveStop(){
                 }else{
                     if (form_view=='view_way_stop'){
                         getIconLocationWay();
-                        $("#det-parada-modal").dialog('close');
+                        $('.ui-dialog').dialog('close');
                     }
                 }
-                //$("#det-parada-modal").dialog('close');
+                
             }else{
                 if (response.state == 'error_max_seats'){
                     alert('ERROR, la ruta de BUS no cuenta con asientos disponibles. Por favor cambien de ruta.');                
@@ -320,7 +320,9 @@ function getIconLocation(){
             getOfficeLocation(response.result[0].idsucursal);
 
             map.setCenter(bounds.getCenter());
-            $("#det-parada-modal").dialog('close');
+            //$("#det-parada-modal").dialog('close');
+            //cierra las ventanas modales.
+            $('.ui-dialog').dialog('close');
         }
     });
   
@@ -454,7 +456,8 @@ function setOptionValue(value){
 function setIcons(coordenadas, result){
     //if (result.idalumno!="-1"){
         var popup;
-        var icon_casa
+        var icon_casa;
+        var seguimiento='';
         if ((form_view=='view_student_stop')||(form_view=='view_stops_tracking')){
             if(result.codparada==result.idparada)
                 icon_casa =  '/assets/images/casa.png';
@@ -466,6 +469,7 @@ function setIcons(coordenadas, result){
                     icon_casa =  '/assets/images/casa2.png';
                 else
                     icon_casa =  '/assets/images/casa.png';
+                seguimiento = result.seguimiento;
             }
         }
         
@@ -475,7 +479,7 @@ function setIcons(coordenadas, result){
             //animation: google.maps.Animation.DROP, 
             draggable: true,
             icon : icon_casa,
-            title : result.orden_parada+'. '+result.nombre+' - '+result.direccion +' - '+result.telefono+' - '+result.descripcion
+            title : result.orden_parada+'. '+result.nombre+' - '+seguimiento+' - '+result.direccion +' - '+result.telefono+' - '+result.descripcion
         });
         markersArray.push(iconMarker);
                 
@@ -487,7 +491,9 @@ function setIcons(coordenadas, result){
             //$('#longitud').val(result.longitud);
             $('#latitud').val(evento.latLng.lat());
             $('#longitud').val(evento.latLng.lng());
-            $('#nombre').val(result.nombre);
+            $('#nombre').val(result.nombre +' - '+seguimiento);
+            $('#foto').attr('src', "/assets/images/students/" + result.foto1) ;
+            console.log("/assets/images/students/" + result.foto1);
             $('#telefono').val(result.telefono);
             $('#direccion').val(result.direccion);
             setOptionValue(result.idruta);

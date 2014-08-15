@@ -52,7 +52,7 @@
     
         <div data-role="header" data-theme="b">
            <h1>Punto de parada</h1> 
-           <label for="direccion-sug"><span id="direccion-sug"></span></label>
+           &nbsp;&nbsp;<label for="direccion-sug"><span id="direccion-sug"></span></label>
         </div><!-- /header -->
         <div data-role="content" id="idcontent" data-theme="b">
             <input id="idparada" name="idparada" type="hidden" value="">
@@ -60,20 +60,33 @@
             <input id="latitud"  name="latitud" type="hidden" value="">
             <input id="longitud" name="longitud" type="hidden" value="">
             
-            <label for="nombre">Alumno:</label>
-            <input name="nombre" id="nombre" placeholder="" value="" type="text" readonly="true">
-
-            <label for="direccion">Dirección:</label>
-            <input name="direccion" id="direccion" placeholder="" value="" type="text">
-            <label for="descripcion">Descripción:</label>
-            <input name="descripcion" id="descripcion" placeholder="" value="" type="text">
-            <label for="telefono">Teléfono:</label>
-            <input name="telefono" id="telefono" placeholder="" value="" type="text">
-            <label for="orden_parada">Orden de parada:</label>
-            <input name="orden_parada" id="orden_parada" placeholder="" value="" pattern="[0-9]*" type="number">
-            <label for="select-allrutas">Ruta:</label>
-            <select name="select-allrutas" id="select-allrutas"></select>
-            
+            <table border=0 width="100%"><tbody>
+            <tr>
+            <td width="20%"><img id="foto" alt="" style="width: 50px; height: 50px" src="" ></td>
+            <td width="80%"><input name="nombre" id="nombre" placeholder="" value="" type="text" readonly="true"></td>
+            </tr>
+            <tr>
+            <td ><label for="direccion">Dirección:</label></td>
+            <td ><input name="direccion" id="direccion" placeholder="Dirección:" value="" type="text"></td>
+            </tr>
+            <tr>
+            <td ><label for="descripcion">Descripción:</label></td>
+            <td ><input name="descripcion" id="descripcion" placeholder="Descripción:" value="" type="text"></td>
+            </tr>
+            <tr>
+            <td ><label for="telefono">Teléfono:</label></td>
+            <td ><input name="telefono" id="telefono" placeholder="Teléfono" value="" type="text"></td>
+            </tr>
+            <tr>
+            <td ><label for="orden_parada">Orden de parada:</label></td>
+            <td ><input name="orden_parada" id="orden_parada" placeholder="" value="" pattern="[0-9]*" type="number"></td>
+            </tr>
+            <tr>
+            <td ><label for="select-allrutas">Ruta:</label></td>
+            <td ><select name="select-allrutas" id="select-allrutas"></select></td>
+            </tr>
+            </tbody>
+            </table>
         </div>
         
         <p>
