@@ -469,7 +469,7 @@ function setIcons(coordenadas, result){
                     icon_casa =  '/assets/images/casa2.png';
                 else
                     icon_casa =  '/assets/images/casa.png';
-                seguimiento = result.seguimiento;
+                seguimiento = ' - '+result.seguimiento;
             }
         }
         
@@ -491,7 +491,7 @@ function setIcons(coordenadas, result){
             //$('#longitud').val(result.longitud);
             $('#latitud').val(evento.latLng.lat());
             $('#longitud').val(evento.latLng.lng());
-            $('#nombre').val(result.nombre +' - '+seguimiento);
+            $('#nombre').val(result.nombre + seguimiento);
             $('#foto').attr('src', "/assets/images/students/" + result.foto1) ;
             console.log("/assets/images/students/" + result.foto1);
             $('#telefono').val(result.telefono);
