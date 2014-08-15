@@ -479,7 +479,7 @@ function setIcons(coordenadas, result){
             //animation: google.maps.Animation.DROP, 
             draggable: true,
             icon : icon_casa,
-            title : result.orden_parada+'. '+result.nombre+' - '+seguimiento+' - '+result.direccion +' - '+result.telefono+' - '+result.descripcion
+            title : result.orden_parada+'. '+result.nombre+seguimiento+' - '+result.direccion +' - '+result.telefono+' - '+result.descripcion
         });
         markersArray.push(iconMarker);
                 
@@ -493,7 +493,7 @@ function setIcons(coordenadas, result){
             $('#longitud').val(evento.latLng.lng());
             $('#nombre').val(result.nombre + seguimiento);
             $('#foto').attr('src', "/assets/images/students/" + result.foto1) ;
-            console.log("/assets/images/students/" + result.foto1);
+           
             $('#telefono').val(result.telefono);
             $('#direccion').val(result.direccion);
             setOptionValue(result.idruta);
