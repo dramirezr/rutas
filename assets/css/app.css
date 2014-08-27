@@ -65,13 +65,14 @@ p{
     border:solid 10px #7e838a;
 }
 #contenido-login{
-    width:600px;
+    width:300px;
     height:auto;
     background:#e0e3e6;
-    text-align:none;
-    margin:20px auto;
-    border-radius:10px;
-    border:solid 10px #7e838a;
+    text-align:auto;
+    margin:200px 20px;
+    border-radius:20px;
+    border:solid 15px #7e838a;
+    vertical-align: bottom
 }
 #pie{
     width:900px;
@@ -108,7 +109,7 @@ p{
 
 a.button {
 font-weight: bold;
-font-size: 9px;
+font-size: 12px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 padding: 4px 8px;
 border-top: 1px solid white;
@@ -120,7 +121,7 @@ min-width: 75px;
 text-transform: uppercase;
 }
 a.button:link {
-background-color: #369;
+background-color: #FF9900;
 color: #FFF;
 text-decoration: none;
 }
@@ -130,8 +131,8 @@ color: #fff;
 text-decoration: none;
 }
 a.button:hover {
-background-color: #369;
-color: #f47b09;
+background-color: #7e838a;
+color: #FFF;
 border-color: black white white black;
 text-decoration: none;
 }
@@ -141,6 +142,7 @@ color: #f47b09;
 text-decoration: none;
 }
 
-span.activo { background: url(inactivo.png) 0 0 no-repeat; }
+span.activo { background: url(inactivo.png) 0 0 no-repeat center top;; }
+
 
 </style> 

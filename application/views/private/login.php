@@ -22,48 +22,43 @@
 
   <!-- body content here -->
 <div>
-		<img id="background" src="<?=base_url()?>assets/images/fondo.jpg" alt="" title="" />
+		<img id="background" src="<?=base_url()?>assets/images/fondo.png" alt="" title="" />
 </div>
 <div id="scroller">
 	<div id="cabecera">
     	<div class="large-8 large-centered columns">
+	  		<!--
 	  		<h3 class="centered-text"><?=$this->config->item('app_name');?></h3>
+	  		-->
 		</div>
 	</div>
 
  <div id="contenido-login">
-	<div class="row">
-	  <div class="large-8 large-centered columns"><p>&nbsp;</p></div>
-	</div>
-
 	<? if ($error): ?>
 	<div class="row">
-	  <div class="large-6 large-centered columns">
+	  <div class="large-12 large-centered columns">
 	  	<div data-alert class="alert-box alert">
   			<?=$error?>
   			<a href="#" class="close">&times;</a>
-			</div>
+		</div>
 	  </div>
 	</div>
 	<? endif; ?>
 
-
 	<div class="row">
-		<div class="large-8 large-centered columns">
+		<div class="large-12 large-centered columns">
 			<?=form_open('login/do_login', array('id' => 'login-form'));?>
 			  	<fieldset>
 			    	<legend><h5><?= isset($enterprise->name) ? $enterprise->name : ''?><?=lang('login.userlogin')?></h5></legend>
-			
 				    <div class="row">
 				      <div class="large-12 columns">
-				      	<label><?=lang('login.usercode')?></label>
+				      	<label><b><?=lang('login.usercode')?></b></label>
 				        <input type="text" id="username" name="username" placeholder="<?=lang('login.usercode')?>" />
 				      </div>
 				    </div>
-	
-				    <div class="row">
+		    		<div class="row">
 				      <div class="large-12 columns">
-				      	<label><?=lang('login.password')?></label>
+				      	<label><b><?=lang('login.password')?></b></label>
 				        <input type="password" id="password" name="password" placeholder="<?=lang('login.password')?>" />
 				      </div>
 				    </div>

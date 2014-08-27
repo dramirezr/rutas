@@ -206,7 +206,8 @@ function updateLocation(){
         timeout : 5000,
         data : {
             lat : lat,
-            lng : lng
+            lng : lng,
+            cachehora : (new Date()).getTime()
         },
         
     }).done(function(response){
@@ -608,19 +609,22 @@ function updateStateStudent(idstudent,idstate){
                         $('#ckbox-'+i+'-'+idstudent).attr("checked",false).checkboxradio("refresh");
                 }
                 $('#ckbox-'+idstate+'-'+idstudent).attr("checked",true).checkboxradio("refresh");
-             /*   
+                
                 var oldTheme = $('#fieldset-'+idstudent).attr('data-theme'); 
-                var newTheme;
+                var oldclass = 'ui-btn-up-'+oldTheme+' ui-body-d';
+
+                var newTheme= 'a';
+                var newclass= 'ui-btn-up-a ui-body-d';
                 if ((idstate==2)||(idstate==4)){
                     newTheme = 'e';
-                }else{
-                    newTheme = 'a';
+                    newclass = 'ui-btn-up-e ui-body-d';
                 }
-                
+                //console.log('#fieldset-'+idstudent+' tema viejo:'+oldTheme+' nuevo tema:'+newTheme);
+                $('#fieldset-'+idstudent).find('a').toggleClass(oldclass + ' ui-btn-hover-d').toggleClass(newclass + ' ui-btn-hover-d');
+                //$('#fieldset-'+idstudent).find('.ui-collapsible-content').toggleClass(oldclass).toggleClass(newclass);
                 $('#fieldset-'+idstudent).attr('data-theme', newTheme);
                 $('#fieldset-'+idstudent).trigger('refresh', newTheme);
-            */
-                getWayStop();
+                //getWayStop();
 
             }else{
                 $('#ckbox-'+idstate+'-'+idstudent).attr("checked",false).checkboxradio("refresh");

@@ -362,10 +362,10 @@ $config['proxy_ips'] = '';
 $config['app_name'] = 'Rutas - Sistema de Gestión de Recorridos para
 Instituciones';
 $config['max_verification_attemps'] = 10;
-$config['verification_interval'] = 5000; //In milliseconds
+$config['verification_interval'] = 15000; //In milliseconds
  
-$config['agent_verification_interval'] = 5000; //In milliseconds
-$config['agent_updatelocation_interval'] = 5000; //In milliseconds
+$config['agent_verification_interval'] = 15000; //In milliseconds
+$config['agent_updatelocation_interval'] = 15000; //In milliseconds
 $config['distance_call'] = 3.5; //In kilometros
 $config['distance_call_sos'] = 3; //In kilometros
 
