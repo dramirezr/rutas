@@ -361,6 +361,11 @@ $config['proxy_ips'] = '';
  			
 $config['app_name'] = 'Rutas - Sistema de Gestión de Recorridos para
 Instituciones';
+$config['app_name_'] = 'Buskoo Rutas';
+$config['app_country'] = 'Colombia';
+$config['copyright'] = '© 2014 Good People Technologies';
+$config['app_link'] = 'http://www.facil.com.co'; 
+
 $config['max_verification_attemps'] = 10;
 $config['verification_interval'] = 15000; //In milliseconds
  

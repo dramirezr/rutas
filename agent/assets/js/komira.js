@@ -446,6 +446,9 @@ function init(){
             scode = response.code;
             verification_interval = response.verification_interval;
             updatelocation_interval = response.updatelocation_interval;
+            $('#app_name').html(response.app_name);
+            $('#copyright').html(response.copyright);
+            $('#copyright2').html(response.copyright);
 
         }else{
             $('#popupBasic').html('No hay conexión al servidor, intente de nuevo mas tarde.');

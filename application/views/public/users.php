@@ -38,7 +38,7 @@
 <div data-role="page" id="login-page">
     <div data-theme="b" data-role="header">
         <h3>
-            Buskoo Rutas
+            <?=ci_config('app_name_')?>
         </h3>
     </div>
     <div data-role="content">
@@ -67,7 +67,7 @@
     </div>
     <div data-theme="b" data-role="footer" data-position="fixed">
         <h4>
-			© 2014 Good People Technologies
+			<a href="<?= $this->config->item('app_link') ?>" ><?= $this->config->item('copyright') ?></a>
         </h4>
     </div>
   
@@ -116,7 +116,7 @@
    
     <div data-theme="b" data-role="footer" data-position="fixed">
         <h4>
-           © 2014 Good People Technologies
+           <a href="<?= $this->config->item('app_link') ?>" ><?= $this->config->item('copyright') ?></a>
         </h4>
     </div>
 </div>

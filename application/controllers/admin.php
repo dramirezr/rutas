@@ -91,6 +91,7 @@ class Admin extends CI_Controller {
 			$crud->fields('nombre','codigo','clave','pais','departamento','ciudad','direccion','telefono');
 			$crud->required_fields('nombre','codigo','pais','departamento','ciudad','direccion','telefono');
 			$crud->display_as('codigo', 'Login');
+			$crud->display_as('departamento', 'Provincia');
 
 			$crud->change_field_type('clave', 'password');
 			
@@ -188,6 +189,7 @@ class Admin extends CI_Controller {
 			$crud->fields('nombre','idsucursal','codigo','clave','pais','departamento','ciudad','direccion','telefono','perfil');
 			$crud->required_fields('nombre','idsucursal','codigo','pais','departamento','ciudad','direccion','telefono','perfil');
 			$crud->display_as('codigo', 'Login');
+			$crud->display_as('departamento', 'Provincia');
 			
 			$crud->set_relation('idsucursal', 'sucursales', 'nombre');
 			$crud->display_as('idsucursal', 'Institución');
@@ -231,6 +233,7 @@ class Admin extends CI_Controller {
 			$crud->columns('codigo','nombre','idsucursal');
 			$crud->fields('codigo','clave','nombre','idsucursal','pais','departamento','ciudad','perfil');
 			$crud->required_fields('codigo','nombre','idsucursal','pais','departamento','ciudad','perfil');
+			$crud->display_as('departamento', 'Provincia');
 			$crud->display_as('codigo', 'ID Ruta');
 			$crud->display_as('nombre', 'Descripción');
 			
@@ -282,8 +285,6 @@ class Admin extends CI_Controller {
 			$crud->display_as('propietario', 'Ruta');
 			$crud->required_fields('idsucursal','placa','propietario');
 
-			$crud->set_relation_dependency('propietario','idsucursal','idsucursal');
-
 			if($this->userconfig->perfil=='ADMIN'){
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
 				$crud->set_relation('propietario', 'usuarios', 'nombre','perfil IN ("CUST") ');
@@ -293,6 +294,8 @@ class Admin extends CI_Controller {
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre','id IN ("'.$this->userconfig->idsucursal.'")');			
 				$crud->set_relation('propietario', 'usuarios', 'nombre','perfil IN ("CUST") and idsucursal IN ("'.$this->userconfig->idsucursal.'")');
 			}
+
+			//$crud->set_relation_dependency('propietario','idsucursal','idsucursal');
 
 			if($this->userconfig->perfil<>'ADMIN')
 				$crud->where('vehiculos.idsucursal =', $this->userconfig->idsucursal);
@@ -312,7 +315,7 @@ class Admin extends CI_Controller {
 		if(($this->userconfig->perfil=='ADMIN')or($this->userconfig->perfil=='CALL')){
 		
 			//$crud = new grocery_CRUD();
-
+			$this->config->set_item('grocery_crud_file_upload_allow_file_types','jpg|png');
 			$this->load->library('ajax_grocery_CRUD');
             $crud = new ajax_grocery_CRUD();
 
@@ -324,6 +327,8 @@ class Admin extends CI_Controller {
 			$crud->fields('nombre','idsucursal','codigo','clave','vehiculo','pais','departamento','ciudad','direccion','telefono','foto');
 			$crud->required_fields('nombre','idsucursal','codigo','vehiculo','pais','departamento','ciudad','direccion','telefono');
 			
+			$crud->display_as('departamento', 'Provincia');
+
 			$crud->set_relation('idsucursal', 'sucursales', 'nombre');
 			$crud->display_as('idsucursal', 'institución');
 
@@ -332,6 +337,8 @@ class Admin extends CI_Controller {
 			$crud->display_as('fecha_localizacion', 'Fec. Geolocalizacón');
 			
 			$crud->set_field_upload('foto','assets/images/agents');
+			$crud->callback_after_upload(array($this,'image_callback_after_upload'));
+
 			$crud->change_field_type('clave', 'password');
 			
 
@@ -407,7 +414,7 @@ class Admin extends CI_Controller {
 	{
 		if(($this->userconfig->perfil=='ADMIN')or($this->userconfig->perfil=='CALL')){
 			//$crud = new grocery_CRUD();
-
+			$this->config->set_item('grocery_crud_file_upload_allow_file_types','jpg|png');
 			$this->load->library('ajax_grocery_CRUD');
             $crud = new ajax_grocery_CRUD();
 
@@ -423,9 +430,11 @@ class Admin extends CI_Controller {
 			$crud->required_fields('codigo','idsucursal','nombre');
 			//$crud->set_relation('idparadas', 'paradas', 'direccion');
 			$crud->set_field_upload('foto1','assets/images/students');
-			$crud->set_field_upload('foto2','assets/images/students');
 			$crud->display_as('foto1', 'Foto uno');
+			$crud->set_field_upload('foto2','assets/images/students');
 			$crud->display_as('foto2', 'Foto dos');
+			$crud->callback_after_upload(array($this,'image_callback_after_upload'));
+			
 			$crud->display_as('idparada', 'Punto de parada');
 			
 
@@ -647,5 +656,18 @@ class Admin extends CI_Controller {
     	redirect($user->lang.'/login'); 
 
     }
+
+
+	function image_callback_after_upload($uploader_response,$field_info, $files_to_upload)
+	{
+	    $this->load->library('image_moo');
+	 
+	    //Is only one file uploaded so it ok to use it with $uploader_response[0].
+	    $file_uploaded = $field_info->upload_path.'/'.$uploader_response[0]->name; 
+	 
+	    $this->image_moo->load($file_uploaded)->resize(96,96)->save($file_uploaded,true);
+	 
+	    return true;
+	}
 	
 }

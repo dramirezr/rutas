@@ -360,6 +360,11 @@ $config['proxy_ips'] = '';
  //Custom config
  
 $config['app_name'] = 'Rutas - Sistema de Gestión de Recorridos para Instituciones';
+$config['app_name_'] = 'Buskoo Rutas';
+$config['app_country'] = 'Ecuador, Quito';
+$config['copyright'] = 'by Geocommerce Cia. Ltda. Quito, Ecuador';
+$config['app_link'] = 'http://www.geocommerce.com.ec'; 
+
 $config['max_verification_attemps'] = 10;
 $config['verification_interval'] = 8000; //In milliseconds
  

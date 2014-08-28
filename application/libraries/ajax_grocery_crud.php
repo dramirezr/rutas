@@ -211,11 +211,9 @@ public function getStateInfo()
 	{
 		list($field_name , $related_table , $related_field_title, $where_clause, $order_by)  = $relation_info;
 
-	//	if ($my_where!='')
-	//		$where_clause = array($relation_key_field => $relation_key_value, 'activo' => 'S' );
-	//	else
 		
 		$where_clause = array($relation_key_field => $relation_key_value);
+	
 		if(empty($relation_key_value)){
 			$relation_array = array();
 		}else{
