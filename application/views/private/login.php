@@ -22,7 +22,7 @@
 
   <!-- body content here -->
 <div>
-		<img id="background" src="<?=base_url()?>assets/images/fondo.png" alt="" title="" />
+		<img id="background" src="<?=base_url()?>assets/images/fondo.jpg" alt="" title="" />
 </div>
 <div id="scroller">
 	<div id="cabecera">

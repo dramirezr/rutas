@@ -226,20 +226,16 @@ class Admin extends CI_Controller {
 			$crud->set_theme('datatables');
 			$crud->set_table('usuarios');
 			$crud->set_subject('Rutas');
-			if($this->userconfig->perfil=='CALL')
-			{
-				$crud->unset_add();
-				$crud->unset_delete();
-				$crud->unset_export();
-				$crud->unset_print();	
-			}
+			
 			//$crud->columns('nombre','idsucursal','codigo','pais','departamento','ciudad','direccion','telefono','perfil');
-			$crud->columns('nombre','idsucursal','codigo');
-			$crud->fields('nombre','idsucursal','codigo','clave','pais','departamento','ciudad','direccion','telefono','perfil');
-			$crud->required_fields('nombre','idsucursal','codigo','pais','departamento','ciudad','direccion','telefono','perfil');
-			$crud->display_as('codigo', 'Login');
+			$crud->columns('codigo','nombre','idsucursal');
+			$crud->fields('codigo','clave','nombre','idsucursal','pais','departamento','ciudad','perfil');
+			$crud->required_fields('codigo','nombre','idsucursal','pais','departamento','ciudad','perfil');
+			$crud->display_as('codigo', 'ID Ruta');
+			$crud->display_as('nombre', 'Descripción');
 			
 			$crud->change_field_type('clave', 'password');
+			$crud->change_field_type('clave', 'hidden');
 			$crud->change_field_type('perfil', 'hidden');
 			if($this->userconfig->perfil=='ADMIN')
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
