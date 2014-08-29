@@ -49,9 +49,13 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'software_rutas';
-$db['default']['password'] = '4pl1c02010';
-$db['default']['database'] = 'software_rutas';
+//$db['default']['username'] = 'software_rutas';
+//$db['default']['password'] = '4pl1c02010';
+//$db['default']['database'] = 'software_rutas';
+$db['default']['username'] = 'pidataxi_rutas';
+$db['default']['password'] = ',FysQo!Z5&5i';
+$db['default']['database'] = 'pidataxi_rutas';
+
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

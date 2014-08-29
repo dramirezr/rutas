@@ -359,8 +359,7 @@ $config['proxy_ips'] = '';
 
  //Custom config
  			
-$config['app_name'] = 'Rutas - Sistema de Gestión de Recorridos para
-Instituciones';
+$config['app_name'] = 'Rutas - Sistema de Gestión de Recorridos para Instituciones';
 $config['app_name_'] = 'Buskoo Rutas';
 $config['app_country'] = 'Colombia';
 $config['copyright'] = '© 2014 Good People Technologies';

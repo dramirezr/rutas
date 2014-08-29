@@ -44,7 +44,7 @@
     <div data-role="content">
     
         <div style=" text-align:center">
-           <img style="width: 96px; height: 96px" src="<?=base_url()?>assets/images/logo-ruta.png">
+           <img style="width: 96px; height: 96px" src="<?=base_url()?>assets/images/logo.png">
         </div>
         
         <form id="login-form" action="" method="POST">

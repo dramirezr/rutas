@@ -449,6 +449,7 @@ function init(){
             $('#app_name').html(response.app_name);
             $('#copyright').html(response.copyright);
             $('#copyright2').html(response.copyright);
+            console.log('response.copyright:'+response.copyright);
 
         }else{
             $('#popupBasic').html('No hay conexión al servidor, intente de nuevo mas tarde.');
