@@ -449,8 +449,7 @@ function init(){
             $('#app_name').html(response.app_name);
             $('#copyright').html(response.copyright);
             $('#copyright2').html(response.copyright);
-            console.log('response.copyright:'+response.copyright);
-
+           
         }else{
             $('#popupBasic').html('No hay conexión al servidor, intente de nuevo mas tarde.');
             $('#popupBasic').popup();
@@ -624,10 +623,14 @@ function updateStateStudent(idstudent,idstate){
                     newclass = 'ui-btn-up-e ui-body-d';
                 }
                 //console.log('#fieldset-'+idstudent+' tema viejo:'+oldTheme+' nuevo tema:'+newTheme);
-                $('#fieldset-'+idstudent).find('a').toggleClass(oldclass + ' ui-btn-hover-d').toggleClass(newclass + ' ui-btn-hover-d');
-                //$('#fieldset-'+idstudent).find('.ui-collapsible-content').toggleClass(oldclass).toggleClass(newclass);
                 $('#fieldset-'+idstudent).attr('data-theme', newTheme);
                 $('#fieldset-'+idstudent).trigger('refresh', newTheme);
+                
+                $('#fieldset-'+idstudent).find('a').toggleClass(oldclass + ' ui-btn-hover-d').toggleClass(newclass + ' ui-btn-hover-d');
+                $('#fieldset-'+idstudent).trigger('collapse'); 
+                $('#fieldset-'+idstudent).trigger('refresh');
+                $('#student_stop').trigger('refresh');
+                
                 //getWayStop();
 
             }else{
