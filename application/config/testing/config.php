@@ -359,20 +359,19 @@ $config['proxy_ips'] = '';
 
  //Custom config
  
-$config['app_name'] = 'Rutas - Sistema de Gestión de Recorridos para
-Instituciones';
-$config['app_name_'] = 'Fácil Rutas';
-$config['app_country'] = 'Colombia';
-$config['copyright'] = '© 2014 Good People Technologies';
-$config['app_link'] = 'http://www.facil.com.co'; 
+$config['app_name'] 						= 'Monitor School Routes';
+$config['app_name_'] 						= 'Monitor School Routes';
+$config['app_country'] 						= 'Colombia';
+$config['copyright'] 						= '© 2014 Good People Technologies';
+$config['app_link'] 						= 'http://www.facil.com.co'; 
 
-$config['max_verification_attemps'] = 10;
-$config['verification_interval'] = 16000; //In milliseconds
+$config['max_verification_attemps'] 		= 10;
+$config['verification_interval'] 			= 8000; //In milliseconds
  
-$config['agent_verification_interval'] = 16000; //In milliseconds
-$config['agent_updatelocation_interval'] = 16000; //In milliseconds
-$config['distance_call'] = 1.5; //In kilometros
-$config['distance_call_sos'] = 2; //In kilometros
+$config['agent_verification_interval'] 		= 8000; //In milliseconds
+$config['agent_updatelocation_interval'] 	= 8000; //In milliseconds
+$config['distance_call'] 					= 1.5; //In kilometros
+$config['distance_call_sos'] 				= 2; //In kilometros
 
  
 /* End of file config.php */
