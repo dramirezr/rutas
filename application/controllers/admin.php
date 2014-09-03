@@ -231,14 +231,12 @@ class Admin extends CI_Controller {
 			
 			//$crud->columns('nombre','idsucursal','codigo','pais','departamento','ciudad','direccion','telefono','perfil');
 			$crud->columns('codigo','nombre','idsucursal');
-			$crud->fields('codigo','clave','nombre','idsucursal','pais','departamento','ciudad','perfil');
+			$crud->fields('codigo','nombre','idsucursal','pais','departamento','ciudad','perfil');
 			$crud->required_fields('codigo','nombre','idsucursal','pais','departamento','ciudad','perfil');
 			$crud->display_as('departamento', 'Provincia');
 			$crud->display_as('codigo', 'ID Ruta');
 			$crud->display_as('nombre', 'Descripción');
 			
-			$crud->change_field_type('clave', 'password');
-			$crud->change_field_type('clave', 'hidden');
 			$crud->change_field_type('perfil', 'hidden');
 			if($this->userconfig->perfil=='ADMIN')
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
@@ -247,10 +245,7 @@ class Admin extends CI_Controller {
 			
 			$crud->display_as('idsucursal', 'Institución');
 
-	    	$crud->callback_edit_field('clave',array($this,'set_password_input_to_empty'));
-			$crud->callback_add_field('clave',array($this,'set_password_input_to_empty'));
-				
-			$crud->callback_edit_field('perfil',array($this,'set_user_cust'));
+	    	$crud->callback_edit_field('perfil',array($this,'set_user_cust'));
 			$crud->callback_add_field('perfil',array($this,'set_user_cust'));
 				
 			$crud->callback_before_update(array($this,'encrypt_password_callback'));
