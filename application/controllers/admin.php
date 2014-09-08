@@ -57,6 +57,8 @@ class Admin extends CI_Controller {
 
     }  
 
+
+
     function set_password_input_to_empty() {
     	return "<input type='password' name='clave' value='' />";
 	}
@@ -218,6 +220,11 @@ class Admin extends CI_Controller {
 		}
 	}
 
+	function set_code_rutas($post_array,$primary_key)
+	{
+	    $this->db->update('usuarios',array('codigo' => $primary_key),array('id' => $primary_key));
+    	return true;
+	}	
 
 	function user_managervehicle()
 	{
@@ -238,6 +245,8 @@ class Admin extends CI_Controller {
 			$crud->display_as('nombre', 'Descripción');
 			
 			$crud->change_field_type('perfil', 'hidden');
+			$crud->change_field_type('codigo', 'hidden');
+			
 			if($this->userconfig->perfil=='ADMIN')
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
 			else
@@ -250,6 +259,9 @@ class Admin extends CI_Controller {
 				
 			$crud->callback_before_update(array($this,'encrypt_password_callback'));
 			$crud->callback_before_insert(array($this,'encrypt_password_callback'));
+
+			$crud->callback_after_insert(array($this, 'set_code_rutas'));
+   
 
 			$crud->where('perfil =', 'CUST');
 
