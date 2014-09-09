@@ -237,16 +237,17 @@ class Admin extends CI_Controller {
 			$crud->set_subject('Rutas');
 			
 			//$crud->columns('nombre','idsucursal','codigo','pais','departamento','ciudad','direccion','telefono','perfil');
-			$crud->columns('codigo','nombre','idsucursal');
-			$crud->fields('codigo','nombre','idsucursal','pais','departamento','ciudad','perfil');
-			$crud->required_fields('codigo','nombre','idsucursal','pais','departamento','ciudad','perfil');
-			$crud->display_as('departamento', 'Provincia');
-			$crud->display_as('codigo', 'ID Ruta');
-			$crud->display_as('nombre', 'Descripción');
+			$crud->columns('idsucursal','nombre');
+			$crud->fields('codigo','idsucursal','nombre','pais','departamento','ciudad','perfil');
+			$crud->required_fields('nombre','idsucursal','perfil');
+			$crud->display_as('nombre', 'Ruta');
 			
 			$crud->change_field_type('perfil', 'hidden');
 			$crud->change_field_type('codigo', 'hidden');
-			
+			$crud->change_field_type('pais', 'hidden');
+			$crud->change_field_type('departamento', 'hidden');
+			$crud->change_field_type('ciudad', 'hidden');
+
 			if($this->userconfig->perfil=='ADMIN')
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
 			else
