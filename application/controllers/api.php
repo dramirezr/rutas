@@ -202,7 +202,12 @@ class Api extends CI_Controller {
 		$cust_perfil = $userconfig->perfil;
 		$cust_idsucursal = $userconfig->idsucursal;
 		$idruta = $this->input->get_post('idruta');
-		$paradas = $this->paradas->get_way_stop($idruta,$cust_id,$cust_perfil,$cust_idsucursal);
+		$idturno = $this->input->get_post('idturno');
+
+		if ($idturno=='T')
+			$paradas = $this->paradas->get_way_stop_2($idruta,$cust_id,$cust_perfil,$cust_idsucursal);
+		else
+			$paradas = $this->paradas->get_way_stop($idruta,$cust_id,$cust_perfil,$cust_idsucursal);
 		
 		die(json_encode(array('state' => 'ok','idruta' =>$idruta,'result' => $paradas)));
 	}	
@@ -254,6 +259,7 @@ class Api extends CI_Controller {
 	
 	function saveStop(){
 		$this->load->model('paradas');
+		$this->load->model('alumno');
 	 	$id 					= $this->input->get_post('idparada');
 		$data['idalumno'] 		= $this->input->get_post('idalumno');
 		$data['latitud'] 		= $this->input->get_post('latitud');
@@ -265,10 +271,10 @@ class Api extends CI_Controller {
 			$data['orden_parada'] 	= $this->input->get_post('orden_parada');
         $data['descripcion'] 	= $this->input->get_post('descripcion');
 		$principal			 	= $this->input->get_post('principal');
-		
-		
+		$parada_tarde			= $this->input->get_post('parada_tarde');
+		$flag = 'false';
+
 		if ($principal=='true'){
-			$this->load->model('alumno');
 			//validar que existan los asientos antes de cambiarle la ruta al niño
 			$num_puestos = $this->alumno->get_puestos_ruta($data['idruta']);
 			$num_alumnos = $this->alumno->get_alumnos_ruta($data['idalumno'] ,$data['idruta']);
@@ -283,12 +289,44 @@ class Api extends CI_Controller {
 
 				$pto_principal['idparada']=$queryId;
 				$this->alumno->update($data['idalumno'],$pto_principal);
-				die(json_encode(array('state' => 'ok', 'queryId' => $queryId, 'users' => $num_alumnos->num,'seats' => $num_puestos->num)));
+				$flag = 'true';
+				//die(json_encode(array('state' => 'ok', 'queryId' => $queryId, 'users' => $num_alumnos->num,'seats' => $num_puestos->num)));
 
 			}else{
 				die(json_encode(array('state' => 'error_max_seats','users' => $num_alumnos->num,'seats' => $num_puestos->num)) );		
 			}
+		}else{
+			$this->alumno->set_pto_manana($data['idalumno'], $id);
 		}
+
+		if ($parada_tarde=='true'){
+			
+			//validar que existan los asientos antes de cambiarle la ruta al niño
+			$num_puestos = $this->alumno->get_puestos_ruta($data['idruta']);
+			$num_alumnos = $this->alumno->get_alumnos_ruta_tarde($data['idalumno'] ,$data['idruta']);
+			
+			if ($num_alumnos->num < $num_puestos->num){
+				if ($id=='-1'){
+					$queryId = $this->paradas->create($data);
+				}else{
+					$this->paradas->update($id,$data);
+					$queryId = $id;
+				}
+
+				$pto_principal_tarde['idparada_tarde']=$queryId;
+				$this->alumno->update($data['idalumno'],$pto_principal_tarde);
+				$flag = 'true';
+				//die(json_encode(array('state' => 'ok', 'queryId' => $queryId, 'users' => $num_alumnos->num,'seats' => $num_puestos->num)));
+
+			}else{
+				die(json_encode(array('state' => 'error_max_seats_tarde','users' => $num_alumnos->num,'seats' => $num_puestos->num)) );		
+			}
+		}else{
+			$this->alumno->set_pto_tarde($data['idalumno'], $id);
+		}
+				
+		if ($flag=='true')
+			die(json_encode(array('state' => 'ok', 'queryId' => $queryId, 'users' => $num_alumnos->num,'seats' => $num_puestos->num)));
 		
 		if ($id=='-1'){
 			$queryId = $this->paradas->create($data);

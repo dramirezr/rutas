@@ -69,7 +69,8 @@
         <table border=0 width="100%"><tbody>
             <tr>
             <td ><img id="foto" alt="" style="width: 50px; height: 50px" src="" ></td>
-            <td ><label for="chk-principal" >Parada principal</label><input type="checkbox" name="chk-principal" id="chk-principal" class="custom" /></td>
+            <td ><label for="chk-principal" >Parada mañana</label><input type="checkbox" name="chk-principal" id="chk-principal" class="custom" />
+                 <label for="chk-parada_tarde" >Parada tarde</label><input type="checkbox" name="chk-parada_tarde" id="chk-parada_tarde" class="custom" /></td>
             </tr>
             <tr>
             <td width="30%"><label for="nombre">Alumno:</label></td>

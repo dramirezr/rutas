@@ -238,8 +238,8 @@ class Admin extends CI_Controller {
 			
 			//$crud->columns('nombre','idsucursal','codigo','pais','departamento','ciudad','direccion','telefono','perfil');
 			$crud->columns('idsucursal','nombre');
-			$crud->fields('codigo','idsucursal','nombre','pais','departamento','ciudad','perfil');
-			$crud->required_fields('nombre','idsucursal','perfil');
+			$crud->fields('idsucursal','nombre','codigo','pais','departamento','ciudad','perfil');
+			$crud->required_fields('idsucursal','nombre','perfil');
 			$crud->display_as('nombre', 'Ruta');
 			
 			$crud->change_field_type('perfil', 'hidden');
@@ -265,6 +265,7 @@ class Admin extends CI_Controller {
    
 
 			$crud->where('perfil =', 'CUST');
+			//$crud->order_by('idsucursal,nombre');
 
 			if($this->userconfig->perfil<>'ADMIN')
 				$crud->where('idsucursal =', $this->userconfig->idsucursal);
@@ -429,12 +430,14 @@ class Admin extends CI_Controller {
 			$crud->set_theme('datatables');
 			$crud->set_table('alumno');
 			$crud->set_subject('Alumnos');
-			$crud->columns('codigo','idsucursal','idgrado','nombre','idparada');
-			$crud->fields('codigo','clave','idsucursal','idgrado','nombre','foto1','foto2','idparada');
+			$crud->columns('codigo','idsucursal','idgrado','nombre','idparada','idparada_tarde');
+			$crud->fields('codigo','clave','idsucursal','idgrado','nombre','foto1','foto2','idparada','idparada_tarde');
 			$crud->display_as('idsucursal', 'Institución');
 			$crud->display_as('idgrado', 'Grado cursado');
 			
-			$crud->display_as('idparadas', 'Punto de parada');
+			$crud->display_as('idparada', 'Parada mañana');
+			$crud->display_as('idparada_tarde', 'Parada tarde');
+			
 			$crud->required_fields('codigo','idsucursal','nombre');
 			//$crud->set_relation('idparadas', 'paradas', 'direccion');
 			$crud->set_field_upload('foto1','assets/images/students');
@@ -443,9 +446,6 @@ class Admin extends CI_Controller {
 			$crud->display_as('foto2', 'Foto dos');
 			$crud->callback_after_upload(array($this,'image_callback_after_upload'));
 			
-			$crud->display_as('idparada', 'Punto de parada');
-			
-
 			$crud->change_field_type('clave', 'password');
 			$crud->callback_edit_field('clave',array($this,'set_password_input_to_empty'));
     		$crud->callback_add_field('clave',array($this,'set_password_input_to_empty'));
@@ -463,12 +463,14 @@ class Admin extends CI_Controller {
 			if($this->userconfig->perfil=='ADMIN'){
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
 				$crud->set_relation('idparada', 'paradas', 'descripcion', array('idalumno' => $primary_key));
+				$crud->set_relation('idparada_tarde', 'paradas', 'descripcion', array('idalumno' => $primary_key));
 				$crud->set_relation('idgrado', 'grados', 'descripcion');
 			}
 			else{
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre','id IN ("'.$this->userconfig->idsucursal.'")');			
 				$crud->set_relation('idgrado', 'grados', 'descripcion','id IN ("'.$this->userconfig->idsucursal.'")');			
 				$crud->set_relation('idparada', 'paradas', 'descripcion', array('idalumno' => $primary_key));
+				$crud->set_relation('idparada_tarde', 'paradas', 'descripcion', array('idalumno' => $primary_key));
 			}
 
 			$crud->set_relation_dependency('idgrado','idsucursal','idsucursal');

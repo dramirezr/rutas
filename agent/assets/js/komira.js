@@ -344,12 +344,16 @@ function setOfficeIcons(coordenadas){
 
 
 function getStudentStop(){
+    var idturno = $('#select-turno').val();
     $.ajax({
         type : "GET",
         url : server + 'agent/get_stop_location_way',        
         dataType : "json",
         timeout : 5000,
-        data : {},
+        data : {
+            idturno : idturno,
+            cachehora : (new Date()).getTime(),
+        },
     }).done(function(response){
 
         if(response.state == 'ok'){
@@ -460,12 +464,15 @@ function init(){
 
 
 function getWayStop(){
+    var idturno = $('#select-turno').val();
     $.ajax({
         type : "GET",
         url : server + 'agent/get_stop_location_way',        
         dataType : "json",
         timeout : 5000,
         data : {
+            idturno : idturno,
+            cachehora : (new Date()).getTime(),
         },
         
     }).done(function(response){

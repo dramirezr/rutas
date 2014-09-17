@@ -24,7 +24,15 @@ class Alumno extends CI_Model {
 	function update($id, $data){
 		return $this->db->update('alumno', $data, array('id' => $id));
 	}
+
+	function set_pto_manana($id, $idparada){
+		return $this->db->update('alumno', array('idparada' => 0), array('id' => $id,'idparada' => $idparada));
+	}
 	
+	function set_pto_tarde($id, $idparada){
+		return $this->db->update('alumno', array('idparada_tarde' => 0), array('id' => $id,'idparada_tarde' => $idparada));
+	}
+
 	function get_for_login($code, $pass){
 		$pass = md5($pass);
 		$sql = 	" SELECT a.idsucursal, a.id,a.codigo,a.nombre,a.foto1,s.fecha, s.descripcion as estado ";
@@ -82,6 +90,15 @@ class Alumno extends CI_Model {
 		return $result[0];		
 	}
 
+	function get_alumnos_ruta_tarde($alumno,$idruta){
+		$sql  = " select count(a.id) as num ";
+		$sql .= " FROM paradas b, alumno a ";
+ 		$sql .= " where b.idruta = $idruta and b.idalumno <> $alumno and b.id = a.idparada_tarde "; 
+ 		$result = $this->db->query($sql)->result();
+		if(!count($result))
+			return null;
+		return $result[0];		
+	}
 
 
 	

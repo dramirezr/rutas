@@ -218,7 +218,12 @@ function verify_service_status(){
 	function get_stop_location_way(){
 		$this->load->model('paradas');
 		$idruta = $this->agent->idruta;
-		$paradas = $this->paradas->get_way_stop($idruta,'','','');
+		$idturno = $this->input->get_post('idturno');
+		if ($idturno=='T')
+			$paradas = $this->paradas->get_way_stop_2($idruta,'','','');
+		else
+			$paradas = $this->paradas->get_way_stop($idruta,'','','');
+		
 		die(json_encode(array('state' => 'ok','idruta' =>$idruta,'result' => $paradas)));
 	}	
 

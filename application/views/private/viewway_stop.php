@@ -28,12 +28,17 @@
 
     <div data-theme="b" data-role="header">
         <div data-role="fieldcontain">
-            <table border=0 width="70%"><tbody>
+            <table border=0 width="50%"><tbody>
                 <tr><td >
                     <label for="select-rutas-p" class="select">Ruta:</label>
                     <span id="select-rutas-p"></span>
-                    <a href="#" id='btn-search-ruta'  align="left" data-role="button" data-icon="search" data-iconpos="notext" data-theme="c" data-inline="true">Buscar</a>
                 </td>
+                <td>  
+                    <select name="select-turno" id="select-turno" data-role="slider" onchange="getIconLocationWay()">
+                        <option value="M">Mañana</option>
+                        <option value="T">Tarde</option>
+                    </select>
+                  </td>
                 </tr>
                 </tbody>
             </table>
@@ -99,6 +104,7 @@
 
 <div data-role="page" id="page-oculto">
 <input type="checkbox" name="chk-principal" id="chk-principal" class="custom" />
+<input type="checkbox" name="chk-parada_tarde" id="chk-parada_tarde" class="custom" />
 </div>
 
 </body>

@@ -142,7 +142,8 @@ function saveStop(){
                 ruta        : $('#select-allrutas').val(),
                 orden_parada: $('input[name="orden_parada"]').val(),
                 descripcion : $('input[name="descripcion"]').val(),
-                principal   : $('input[name="chk-principal"]').prop("checked")
+                principal   : $('input[name="chk-principal"]').prop("checked"),
+                parada_tarde: $('input[name="chk-parada_tarde"]').prop("checked")
             }
         }).done(function(response){
             if(response.state == 'ok'){
@@ -159,7 +160,10 @@ function saveStop(){
                 
             }else{
                 if (response.state == 'error_max_seats'){
-                    alert('ERROR, la ruta de BUS no cuenta con asientos disponibles. Por favor cambien de ruta.');                
+                    alert('ERROR, la ruta de BUS no cuenta con asientos disponibles en la jornada de la mañana. Por favor cambien de ruta.');                
+                }
+                if (response.state == 'error_max_seats_tarde'){
+                    alert('ERROR, la ruta de BUS no cuenta con asientos disponibles en la jornada de la tarde. Por favor cambien de ruta.');                
                 }
             }
 
@@ -219,6 +223,7 @@ function selectRutas_p(){
             }
 
             $('#select-rutas-p').html(html);
+            //$('#select-rutas-p').trigger( "create" );
 
         });
 }
@@ -355,14 +360,16 @@ function getIconLocationWay(){
     clearInterval(LocationDemonId);
     if(idruta>0){
         LocationDemonId = setInterval(getIconLocationWay, verification_interval);
-    
+        var idturno = $('#select-turno').val();
+        
         $.ajax({
             type : "GET",
             url : lang + '../../../api/get_stop_location_way',        
             dataType : "json",
             data : {
                 cachehora : (new Date()).getTime(),
-                idruta  : idruta
+                idruta  : idruta,
+                idturno : idturno
             }
         }).done(function(response){
 
@@ -375,8 +382,8 @@ function getIconLocationWay(){
                     setIcons(coordenadas, response.result[i]);
                     bounds.extend(coordenadas);
                 }
-
-                getOfficeLocation(response.result[0].idsucursal);
+                if (response.result != null)
+                    getOfficeLocation(response.result[0].idsucursal);
 
                 getBusLocation(idruta,bounds);
             }
@@ -460,9 +467,16 @@ function setIcons(coordenadas, result){
         var seguimiento='';
         if ((form_view=='view_student_stop')||(form_view=='view_stops_tracking')){
             if(result.codparada==result.idparada)
-                icon_casa =  '/assets/images/casa.png';
+                icon_casa =  '/assets/images/casa_m.png';
             else
-                icon_casa =  '/assets/images/casa2.png';
+                if(result.codparada_tarde==result.idparada)
+                    icon_casa =  '/assets/images/casa_t.png';
+                else
+                    icon_casa =  '/assets/images/casa2.png';
+
+            if((result.codparada==result.idparada)&&(result.codparada_tarde==result.idparada))
+               icon_casa =  '/assets/images/casa.png'; 
+
         }else{
             if (form_view=='view_way_stop'){
                 if(result.estado==1)
@@ -471,6 +485,7 @@ function setIcons(coordenadas, result){
                     icon_casa =  '/assets/images/casa.png';
                 seguimiento = ' - '+result.seguimiento;
             }
+
         }
         
         iconMarker = new google.maps.Marker({
@@ -506,6 +521,12 @@ function setIcons(coordenadas, result){
                 $('input[name="chk-principal"]').prop("checked", true).checkboxradio('refresh');
             else
                 $('input[name="chk-principal"]').prop("checked", false).checkboxradio('refresh');
+           
+            $("input[name='chk-parada_tarde']").checkboxradio();
+            if(result.codparada_tarde==result.idparada)
+                $('input[name="chk-parada_tarde"]').prop("checked", true).checkboxradio('refresh');
+            else
+                $('input[name="chk-parada_tarde"]').prop("checked", false).checkboxradio('refresh');
              
            
             codeLatLng(evento.latLng.lat(), evento.latLng.lng());
