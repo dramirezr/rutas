@@ -265,7 +265,7 @@ class Admin extends CI_Controller {
    
 
 			$crud->where('perfil =', 'CUST');
-			//$crud->order_by('idsucursal,nombre');
+			$crud->order_by('idsucursal,nombre');
 
 			if($this->userconfig->perfil<>'ADMIN')
 				$crud->where('idsucursal =', $this->userconfig->idsucursal);
@@ -430,7 +430,7 @@ class Admin extends CI_Controller {
 			$crud->set_theme('datatables');
 			$crud->set_table('alumno');
 			$crud->set_subject('Alumnos');
-			$crud->columns('codigo','idsucursal','idgrado','nombre','idparada','idparada_tarde');
+			$crud->columns('idsucursal','idgrado','nombre','codigo','idparada','idparada_tarde');
 			$crud->fields('codigo','clave','idsucursal','idgrado','nombre','foto1','foto2','idparada','idparada_tarde');
 			$crud->display_as('idsucursal', 'Institución');
 			$crud->display_as('idgrado', 'Grado cursado');
@@ -479,6 +479,8 @@ class Admin extends CI_Controller {
 			if($this->userconfig->perfil<>'ADMIN')
 				$crud->where('alumno.idsucursal =', $this->userconfig->idsucursal);
 			
+			$crud->order_by('idsucursal,idgrado,nombre');
+
 			$output = $crud->render();
 			$output -> op = 'student_management';
 			$this->_admin_output($output);

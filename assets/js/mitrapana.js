@@ -220,11 +220,18 @@ function getIconLocation(){
 function setIcons(coordenadas, result){
     var popup;
     var icon_casa
-    if(result.codparada==result.idparada)
-        icon_casa =  '../assets/images/casa.png';
-    else
-        icon_casa =  '../assets/images/casa2.png';
     
+    if(result.codparada==result.idparada)
+        icon_casa =  '../assets/images/casa_m.png';
+    else
+        if(result.codparada_tarde==result.idparada)
+            icon_casa =  '../assets/images/casa_t.png';
+        else
+            icon_casa =  '../assets/images/casa2.png';
+
+    if((result.codparada==result.idparada)&&(result.codparada_tarde==result.idparada))
+        icon_casa =  '../assets/images/casa.png';
+
     iconMarker = new google.maps.Marker({
         position:coordenadas,
         map: map,
@@ -249,6 +256,20 @@ function setIcons(coordenadas, result){
             $('#direccion').val(result.direccion);
             $('#select-allrutas').val(result.idruta);
             $('#descripcion').val(result.descripcion);
+
+            $("input[name='chk-principal']").checkboxradio();
+            if(result.codparada==result.idparada)
+                $('input[name="chk-principal"]').prop("checked", true).checkboxradio('refresh');
+            else
+                $('input[name="chk-principal"]').prop("checked", false).checkboxradio('refresh');
+           
+            $("input[name='chk-parada_tarde']").checkboxradio();
+            if(result.codparada_tarde==result.idparada)
+                $('input[name="chk-parada_tarde"]').prop("checked", true).checkboxradio('refresh');
+            else
+                $('input[name="chk-parada_tarde"]').prop("checked", false).checkboxradio('refresh');
+             
+           
             
             $.mobile.changePage('#det-parada-modal', { transition: "pop", role: "dialog", reverse: false } );
     });    

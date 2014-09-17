@@ -23,7 +23,7 @@ class Novedades extends CI_Model {
 	}
 
 	function get_all_sucursal($idsucursal){
-		$sql = " select * from novedades where idsucursal=$idsucursal";
+		$sql = " select * from novedades where idsucursal=$idsucursal order by descripcion ";
 		$result = $this->db->query($sql)->result();
 		if(!count($result))
 			return null;

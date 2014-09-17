@@ -141,6 +141,10 @@
             <input name="descripcion" id="descripcion" placeholder="" value="" type="text" readonly="true">
             <label for="telefono">Teléfono:</label>
             <input name="telefono" id="telefono" placeholder="" value="" type="text" readonly="true">
+            <label for="chk-principal" >Parada mañana</label>
+            <input type="checkbox" name="chk-principal" id="chk-principal" class="custom" />
+            <label for="chk-parada_tarde" >Parada tarde</label>
+            <input type="checkbox" name="chk-parada_tarde" id="chk-parada_tarde" class="custom" /></td>
             
         </div>
         

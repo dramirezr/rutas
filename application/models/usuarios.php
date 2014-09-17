@@ -41,7 +41,9 @@ class Usuarios extends CI_Model {
 		$sql = 	" SELECT id,nombre ";
 		$sql .= " FROM usuarios WHERE perfil = 'CUST' ";
 		if ($perfil!='ADMIN')
-			$sql .= " and idsucursal = $idsucursal "; 
+			$sql .= " and idsucursal = $idsucursal ";
+
+		$sql .= " order by nombre "; 
  		$result = $this->db->query($sql)->result();
 		
 		if(!$result)

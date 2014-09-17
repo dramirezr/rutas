@@ -51,6 +51,8 @@ class Alumno extends CI_Model {
 		$sql .= " FROM alumno";
 		if ($perfil!='ADMIN')
 			$sql .= " where idsucursal = $idsucursal "; 
+		$sql .= " order by nombre "; 
+		
  		$result = $this->db->query($sql)->result();
 		
 		if(!$result)
