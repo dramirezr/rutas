@@ -26,11 +26,14 @@ var geocoder = new google.maps.Geocoder();
 var markersArray = [];
 var limits = new google.maps.LatLngBounds();
 var iconMarker;
+var defaultlatitud=0;
+var defaultlongitud=0;
 
 $(document).ready(function() {
-   localizame(); 
-   selectSucursales();
-   $('#btn-search').click(function(e){
+    setCoodenadasOfficeLocation();
+    localizame(); 
+    selectSucursales();
+    $('#btn-search').click(function(e){
         getIcons($('#select-allsucursales').val());
     });
 });
@@ -214,6 +217,7 @@ function localizame() {
 		//navigator.geolocation.getCurrentPosition(coordenadas, errores, {'enableHighAccuracy':true,'timeout':20000,'maximumAge':0});
     }else{
         alert('No hay soporte para la geolocalización.');
+        setCoodenadasDefault();
     }
 }
 
@@ -223,7 +227,29 @@ function coordenadas(position) {
     cargarMapa();
 }
 
+function setCoodenadasDefault(){
+    latitude  = defaultlatitud;
+    longitud  = defaultlongitud;
+    cargarMapa();
+}
 
+function setCoodenadasOfficeLocation(){
+    $.ajax({
+        type : "GET",
+        url : lang + '../../../api/get_default_location',        
+        dataType : "json",
+        data : {
+            cachehora : (new Date()).getTime()
+        }
+        
+    }).done(function(response){
+        if(response.state == 'ok'){
+            defaultlatitud   = response.result.latitud;
+            defaultlongitud  = response.result.longitud;
+        }
+    });
+  
+}
 
 function errores(err) {
     /*Controlamos los posibles errores */
@@ -235,16 +261,20 @@ function errores(err) {
     }
     if (err.code == 2) {
       alert("No se puede obtener la posición actual.");
-	  address_search();
     }
     if (err.code == 3) {
       alert("Hemos superado el tiempo de espera. Vuelve a intentarlo.");
+    }
+
+    if ((err.code == 0)||(err.code == 1)||(err.code == 2)||(err.code == 3))
+    {
+        setCoodenadasDefault();
     }
 }
  
 
 function address_search() {
- var address = 'quito';
+ var address = '';
  geocoder.geocode( { 'address': address}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
                 

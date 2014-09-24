@@ -38,9 +38,12 @@ var idruta = null;
 var busLocationDemonId;
 var verification_interval = null;
 var MAX_ID_HIST = 0;
+var defaultlatitud=0;
+var defaultlongitud=0;
 
 $(document).ready(function() {
-    
+    setCoodenadasOfficeLocation(); 
+
     $("#audio-wrap").hide();
 
     $('#do-login').click(function(e){
@@ -412,6 +415,7 @@ function localizame() {
         //navigator.geolocation.getCurrentPosition(coordenadas, errores, {'enableHighAccuracy':true,'timeout':20000,'maximumAge':0});
     }else{
         alert('No hay soporte para la geolocalización.');
+        setCoodenadasDefault();
     }
 }
 
@@ -437,8 +441,35 @@ function errores(err) {
     if (err.code == 3) {
       alert("Hemos superado el tiempo de espera. Vuelve a intentarlo.");
     }
+    if ((err.code == 0)||(err.code == 1)||(err.code == 2)||(err.code == 3))
+    {
+        setCoodenadasDefault();
+    }
 }
  
+function setCoodenadasDefault(){
+    latitude  = defaultlatitud;
+    longitud  = defaultlongitud;
+    cargarMapa();
+}
+
+function setCoodenadasOfficeLocation(){
+    $.ajax({
+        type : "GET",
+        url :  server  + 'api/get_default_location',        
+        dataType : "json",
+        data : {
+            cachehora : (new Date()).getTime()
+        }
+        
+    }).done(function(response){
+        if(response.state == 'ok'){
+            defaultlatitud   = response.result.latitud;
+            defaultlongitud  = response.result.longitud;
+        }
+    });
+  
+}
 
 
 function cargarMapa() {

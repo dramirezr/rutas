@@ -288,12 +288,14 @@ class Admin extends CI_Controller {
 			$crud->set_table('vehiculos');
 			$crud->set_subject('Vehiculos');
 			$crud->columns('idsucursal','placa','propietario','modelo','marca');
-			$crud->fields('idsucursal','placa','propietario','modelo','marca','puestos');
+			$crud->fields('idsucursal','placa','propietario','modelo','marca','puestos','latitud','longitud');
 			$crud->display_as('idsucursal', 'Institución');
 			$crud->display_as('puestos', 'Número de puestos');
 			$crud->display_as('propietario', 'Ruta');
 			$crud->required_fields('idsucursal','placa','propietario');
-
+			$crud->change_field_type('latitud', 'hidden');
+			$crud->change_field_type('longitud', 'hidden');
+			
 			if($this->userconfig->perfil=='ADMIN'){
 				$crud->set_relation('idsucursal', 'sucursales', 'nombre');
 				$crud->set_relation('propietario', 'usuarios', 'nombre','perfil IN ("CUST") ');
@@ -306,6 +308,8 @@ class Admin extends CI_Controller {
 
 			//$crud->set_relation_dependency('propietario','idsucursal','idsucursal');
 
+			$crud->callback_before_insert(array($this,'insert_coordinates'));
+
 			if($this->userconfig->perfil<>'ADMIN')
 				$crud->where('vehiculos.idsucursal =', $this->userconfig->idsucursal);
 			
@@ -317,7 +321,15 @@ class Admin extends CI_Controller {
 		}
 	}
 
-
+	function insert_coordinates($post_array)
+	{
+		$this->load->model('sqlexteded');
+		$result =  $this->sqlexteded->getLatLngOficce($post_array['idsucursal']);
+		
+        $post_array['latitud']  = $result->latitud;
+        $post_array['longitud'] = $result->longitud;
+    	return $post_array;
+	}
 
 	function agent_management()
 	{
@@ -333,8 +345,11 @@ class Admin extends CI_Controller {
 			$crud->set_subject('Conductores');
 			//$crud->columns('nombre','idsucursal','codigo','vehiculo','pais','departamento','ciudad','direccion','telefono','fecha_localizacion');
 			$crud->columns('nombre','idsucursal','codigo','vehiculo','telefono','fecha_localizacion');
-			$crud->fields('nombre','idsucursal','codigo','clave','vehiculo','pais','departamento','ciudad','direccion','telefono','foto');
+			$crud->fields('nombre','idsucursal','codigo','clave','vehiculo','pais','departamento','ciudad','direccion','telefono','foto','latitud','longitud');
 			$crud->required_fields('nombre','idsucursal','codigo','vehiculo','pais','departamento','ciudad','direccion','telefono');
+			$crud->change_field_type('latitud', 'hidden');
+			$crud->change_field_type('longitud', 'hidden');
+			
 			
 			$crud->display_as('departamento', 'Provincia');
 

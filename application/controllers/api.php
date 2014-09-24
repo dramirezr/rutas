@@ -363,4 +363,18 @@ class Api extends CI_Controller {
 		die(json_encode(array('state' => 'ok','result' => $vehiculo)));
 	}
 
+
+	function get_default_location(){
+		//trae la sucursal a la que pertenece el usuario logueado, 
+		//si no esta loqueado toma la sucursal 1 por defecto.
+		$this->load->model('sqlexteded');
+		$userconfig = $this->session->userdata('userconfig');
+		$idsucursal = $userconfig->idsucursal;
+		if ($idsucursal>0)
+	    	$sucursal   = $this->sqlexteded->getLatLngOficce($idsucursal);
+	    else
+	    	$sucursal   = $this->sqlexteded->getLatLngOficce(1);
+		die(json_encode(array('state' => 'ok','result' => $sucursal)));
+	}
+
 }

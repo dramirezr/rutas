@@ -28,6 +28,8 @@ var limits = new google.maps.LatLngBounds();
 var agentMarker;
 var LocationDemonId=null;
 var iconMarker;
+var defaultlatitud=0;
+var defaultlongitud=0;
 
 $(document).ready(function() {
     if (form_view=='view_student_stop'){
@@ -42,6 +44,7 @@ $(document).ready(function() {
 });
 
 function initStudentStop(){
+    setCoodenadasOfficeLocation();
     selectAlumnos();
     selectRutas();
     localizame(); 
@@ -550,7 +553,8 @@ function localizame() {
         navigator.geolocation.getCurrentPosition(coordenadas, errores);
 		//navigator.geolocation.getCurrentPosition(coordenadas, errores, {'enableHighAccuracy':true,'timeout':20000,'maximumAge':0});
     }else{
-        alert('No hay soporte para la geolocalización.');
+        alert('No hay soporte para la geolocalización.....');
+        setCoodenadasDefault();
     }
 }
 
@@ -572,13 +576,40 @@ function errores(err) {
     }
     if (err.code == 2) {
       alert("No se puede obtener la posición actual.");
-	  address_search();
     }
     if (err.code == 3) {
       alert("Hemos superado el tiempo de espera. Vuelve a intentarlo.");
+      
+    }
+    if ((err.code == 0)||(err.code == 1)||(err.code == 2)||(err.code == 3))
+    {
+        setCoodenadasDefault();
     }
 }
  
+function setCoodenadasDefault(){
+    latitude  = defaultlatitud;
+    longitud  = defaultlongitud;
+    cargarMapa();
+}
+
+function setCoodenadasOfficeLocation(){
+    $.ajax({
+        type : "GET",
+        url : lang + '../../../api/get_default_location',        
+        dataType : "json",
+        data : {
+            cachehora : (new Date()).getTime()
+        }
+        
+    }).done(function(response){
+        if(response.state == 'ok'){
+            defaultlatitud   = response.result.latitud;
+            defaultlongitud  = response.result.longitud;
+        }
+    });
+  
+}
 
 function address_search() {
  var address;
@@ -593,11 +624,13 @@ function address_search() {
 
     } else {
         alert('No hay soporte para la geolocalización.');
+        setCoodenadasOfficeLocation(1);
     }
  });
 }
 
 function cargarMapa() {
+    console.log('latitud,longitud'+latitud+' , '+longitud);
     var latlon = new google.maps.LatLng(latitud,longitud); /* Creamos un punto con nuestras coordenadas */
     var myOptions = {
         zoom: 14,
