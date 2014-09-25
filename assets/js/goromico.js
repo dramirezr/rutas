@@ -32,6 +32,7 @@ var defaultlatitud=0;
 var defaultlongitud=0;
 
 $(document).ready(function() {
+    setCoodenadasOfficeLocation();
     if (form_view=='view_student_stop'){
         initStudentStop();
     }else
@@ -44,7 +45,7 @@ $(document).ready(function() {
 });
 
 function initStudentStop(){
-    setCoodenadasOfficeLocation();
+    
     selectAlumnos();
     selectRutas();
     localizame(); 

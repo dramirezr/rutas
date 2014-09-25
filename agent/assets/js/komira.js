@@ -18,8 +18,8 @@ var updatelocation_interval = null;
 var verifyServiceDemonId;
 var verifyServiceStateDemonId;
 var WaitVeryServiceDemonid;
-var geoOptions = { timeout: verification_interval };
-var ubicacionServicio = null;
+//var geoOptions = { timeout: verification_interval };
+//var ubicacionServicio = null;
 var request_id = null;
 var username = null;
 var password = null;
@@ -54,12 +54,19 @@ var agentMarker;
 var novedadesArray = [];
 var idsucursalruta;
 
+var NotUpdateArray = [];
+var flagErrorUpdate = 'true';
 
 $(document).ready(function() {
-    
-   // $.mobile.loading( "show" );
+      // $.mobile.loading( "show" );
     init();
 
+    $('#btn-error').click(function(e){
+        e.preventDefault();
+        for(var i in NotUpdateArray){
+            console.log(NotUpdateArray[i]);
+        }
+    });
     
     
     $('#do-login').click(function(e){
@@ -218,7 +225,11 @@ function updateLocation(){
             }else{
             	$('#current-position').val('Latitud: ' + lat + ' Longitud: ' + lng);
             }
-            
+
+            //verificar en el arreglo de errores de actualizacion 
+            if (flagErrorUpdate=='true')
+                verifyErrorUpdate();
+
      }).fail(function(jqXHR, textStatus, errorThrown){
     	 $('#current-position').val('======= Error de conexión =======');
          login(username, password);
@@ -598,58 +609,100 @@ function updateStateStudent(idstudent,idstate){
             desnovedad  = '';
         }
 
-        $.ajax({
-            type : "GET",
-            url : server + 'agent/update_state_student',        
-            dataType : "json",
-            data : {
+        var alumnodata = {
                 student     : idstudent,
                 state       : idstate,
                 idnovedad   : idnovedad,
                 desnovedad  : desnovedad,
                 latitud     : lat,
-                longitud    : lng
+                longitud    : lng,
+                insert      : 0
             }
+
+        $.ajax({
+            type : "GET",
+            url : server + 'agent/update_state_student',        
+            dataType : "json",
+            data : alumnodata
         }).done(function(response){
             
             if(response.state=='ok'){
                 
-                for (i = 1; i <= 5; i++) { 
-                    if (i!=idstate)
-                        $('#ckbox-'+i+'-'+idstudent).attr("checked",false).checkboxradio("refresh");
-                }
-                $('#ckbox-'+idstate+'-'+idstudent).attr("checked",true).checkboxradio("refresh");
-                
-                var oldTheme = $('#fieldset-'+idstudent).attr('data-theme'); 
-                var oldclass = 'ui-btn-up-'+oldTheme+' ui-body-d';
-
-                var newTheme= 'a';
-                var newclass= 'ui-btn-up-a ui-body-d';
-                if ((idstate==2)||(idstate==4)){
-                    newTheme = 'e';
-                    newclass = 'ui-btn-up-e ui-body-d';
-                }
-                //console.log('#fieldset-'+idstudent+' tema viejo:'+oldTheme+' nuevo tema:'+newTheme);
-                $('#fieldset-'+idstudent).attr('data-theme', newTheme);
-                $('#fieldset-'+idstudent).trigger('refresh', newTheme);
-                
-                $('#fieldset-'+idstudent).find('a').toggleClass(oldclass + ' ui-btn-hover-d').toggleClass(newclass + ' ui-btn-hover-d');
-                $('#fieldset-'+idstudent).trigger('collapse'); 
-                $('#fieldset-'+idstudent).trigger('refresh');
-                $('#student_stop').trigger('refresh');
-                
-                //getWayStop();
-
             }else{
-                $('#ckbox-'+idstate+'-'+idstudent).attr("checked",false).checkboxradio("refresh");
-                alert("Error al intentar actualizar el estado del alumno, por favor intete de nuevo.");
+                errorUpdateStateStudent(alumnodata);
+                //$('#ckbox-'+idstate+'-'+idstudent).attr("checked",false).checkboxradio("refresh");
+                //alert("Error al intentar actualizar el estado del alumno, por favor intete de nuevo.");
             }
         }).fail(function(jqXHR, textStatus, errorThrown){
-                $('#ckbox-'+idstate+'-'+idstudent).attr("checked",false).checkboxradio("refresh");
-                alert("Error al intentar actualizar el estado del alumno, por favor intete de nuevo.");
-          });     
+                errorUpdateStateStudent(alumnodata);
+                //$('#ckbox-'+idstate+'-'+idstudent).attr("checked",false).checkboxradio("refresh");
+                //alert("Error al intentar actualizar el estado del alumno, por favor intete de nuevo.");
+        });     
+
+        //cambiar estado sin importar si actualiza o no...
+        for (i = 1; i <= 5; i++) { 
+            if (i!=idstate)
+                $('#ckbox-'+i+'-'+idstudent).attr("checked",false).checkboxradio("refresh");
+        }
+        $('#ckbox-'+idstate+'-'+idstudent).attr("checked",true).checkboxradio("refresh");
+                
+        var oldTheme = $('#fieldset-'+idstudent).attr('data-theme'); 
+        var oldclass = 'ui-btn-up-'+oldTheme+' ui-body-d';
+
+        var newTheme= 'a';
+        var newclass= 'ui-btn-up-a ui-body-d';
+        if ((idstate==2)||(idstate==4)){
+            newTheme = 'e';
+            newclass = 'ui-btn-up-e ui-body-d';
+        }
+        //console.log('#fieldset-'+idstudent+' tema viejo:'+oldTheme+' nuevo tema:'+newTheme);
+        $('#fieldset-'+idstudent).attr('data-theme', newTheme);
+        $('#fieldset-'+idstudent).trigger('refresh', newTheme);
+                
+        $('#fieldset-'+idstudent).find('a').toggleClass(oldclass + ' ui-btn-hover-d').toggleClass(newclass + ' ui-btn-hover-d');
+        $('#fieldset-'+idstudent).trigger('collapse'); 
+        $('#fieldset-'+idstudent).trigger('refresh');
+        $('#student_stop').trigger('refresh');
+                
+        //getWayStop();
+
     }
 
 }
 
+function errorUpdateStateStudent(data){
+    NotUpdateArray.push(data);
+}
+
+
+function  updateStateStudentError(id,alumnodata){
+    $.ajax({
+            type : "GET",
+            url : server + 'agent/update_state_student',        
+            dataType : "json",
+            data : alumnodata
+        }).done(function(response){
+            if(response.state=='ok'){
+               NotUpdateArray[id].insert = 1; 
+            }
+         }).fail(function(jqXHR, textStatus, errorThrown){
+            // 
+        });  
+}
+
+function  verifyErrorUpdate(){
+    flagErrorUpdate = 'false';
+    for(var i in NotUpdateArray){
+        if(NotUpdateArray[i].insert===0){
+            updateStateStudentError(i,NotUpdateArray[i]);
+        }
+    }
+    for(var i = NotUpdateArray.length - 1; i >= 0; i--) {
+        if(NotUpdateArray[i].insert===1) {
+            NotUpdateArray.splice(i, 1);
+        }
+    
+    }
+    flagErrorUpdate = 'true';
+}
 
