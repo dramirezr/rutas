@@ -40,6 +40,9 @@ if (defined('ENVIRONMENT'))
 		break;
 	
 		case 'testing':
+			error_reporting(E_ALL);
+			date_default_timezone_set('America/Bogota');
+		break;
 		case 'production':
 			error_reporting(0);
 			date_default_timezone_set('America/Guayaquil');
