@@ -259,7 +259,10 @@ function verify_service_status(){
 		$datos['idagente'] 		= $this->agent->id;
 		//sucursal del agente, o podria ser la sucursal del estudiante???
 		$datos['idsucursal'] 	= $this->agent->idsucursal;
-		$datos['fecha'] 		= date('Y-m-d H:i:s');
+		if ($this->input->get_post('offline')== 1)
+			$datos['fecha']  = $this->input->get_post('fecha');
+		else
+			$datos['fecha'] = date('Y-m-d H:i:s');
 		$datos['descripcion']	= $des_est;
 		$datos['latitud'] 		= $latitud;
 		$datos['longitud'] 		= $longitud;

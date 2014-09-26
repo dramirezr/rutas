@@ -60,14 +60,6 @@ var flagErrorUpdate = 'true';
 $(document).ready(function() {
       // $.mobile.loading( "show" );
     init();
-
-    $('#btn-error').click(function(e){
-        e.preventDefault();
-        for(var i in NotUpdateArray){
-            console.log(NotUpdateArray[i]);
-        }
-    });
-    
     
     $('#do-login').click(function(e){
 		e.preventDefault();
@@ -205,6 +197,7 @@ function login(id, key){
 function updateLocation(){
 	
 	$('#current-position').parent().css('background-color', 'yellow');
+    $('#current-position').val('Latitud: ' + lat + ' Longitud: ' + lng);
 	
     $.ajax({
         type : "GET",
@@ -237,9 +230,6 @@ function updateLocation(){
      //verificar mensaje de ayuda de otros agentes.
      //get_sos();
 }
-
-
-
 
 
 function localizame() {
@@ -616,7 +606,9 @@ function updateStateStudent(idstudent,idstate){
                 desnovedad  : desnovedad,
                 latitud     : lat,
                 longitud    : lng,
-                insert      : 0
+                insert      : 0,
+                fecha       : getDateTime(),
+                offline     : 0
             }
 
         $.ajax({
@@ -676,6 +668,7 @@ function errorUpdateStateStudent(data){
 
 
 function  updateStateStudentError(id,alumnodata){
+    alumnodata.offline = 1;
     $.ajax({
             type : "GET",
             url : server + 'agent/update_state_student',        
@@ -687,7 +680,7 @@ function  updateStateStudentError(id,alumnodata){
             }
          }).fail(function(jqXHR, textStatus, errorThrown){
             // 
-        });  
+    });  
 }
 
 function  verifyErrorUpdate(){
@@ -704,5 +697,17 @@ function  verifyErrorUpdate(){
     
     }
     flagErrorUpdate = 'true';
+}
+
+function getDateTime(){
+    var f       =   new Date();
+    var year    =   f.getFullYear();
+    var month   =   f.getMonth() + 1;
+    var day     =   f.getDate();
+    var hours   =   f.getHours();
+    var minutes =   f.getMinutes();
+    var seconds =   f.getSeconds();
+
+    return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 }
 
