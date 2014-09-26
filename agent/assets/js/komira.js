@@ -181,9 +181,10 @@ function login(id, key){
             // ojoooo no se puede sacar clearInterval de este lado por que no se reinicia el logueo
             clearInterval(updateLocationDemonId);    
             localizame();
-			updateLocation();
-			localizationDemonId = setInterval(localizame, verification_interval);
-            updateLocationDemonId = setInterval(updateLocation, verification_interval);
+            localizationDemonId = setInterval(localizame, verification_interval);
+			
+            updateLocation();
+			updateLocationDemonId = setInterval(updateLocation, verification_interval);
             
             idsucursalruta = user.sucursalruta;
             
@@ -231,7 +232,7 @@ function updateLocation(){
      //get_sos();
 }
 
-
+//maximumAge: Se trata de un valor en milisegundos que establece un intervalo dentro del cual aún se acepta la última posición cacheada que pueda tener almacenado el cliente. Si no se especifica, su valor por defecto es 0, que significa que se iniciará una nueva petición sin tener en cuenta las posiciones cacheadas.
 function localizame() {
     if (navigator.geolocation) { 
 		//navigator.geolocation.getCurrentPosition(coords, errores);
@@ -598,6 +599,8 @@ function updateStateStudent(idstudent,idstate){
             idnovedad   = 0;
             desnovedad  = '';
         }
+        
+        localizame();
 
         var alumnodata = {
                 student     : idstudent,
