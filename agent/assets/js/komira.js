@@ -28,6 +28,8 @@ var lat_user = null;
 var lng_user = null;
 var placa = null;
 var fecha_sos = null;
+var page_state  = 'do-login';
+
 
 var styles = [
                   {
@@ -57,6 +59,26 @@ var idsucursalruta;
 var NotUpdateArray = [];
 var flagErrorUpdate = 'true';
 
+
+window.onpopstate = function(event) {
+ if (window.history && window.history.pushState) {
+    $(window).on('popstate', function() {
+      var hashLocation = location.hash;
+      var hashSplit = hashLocation.split("#!/");
+      var hashName = hashSplit[1];
+      
+      if (hashName !== '') {
+        var hash = window.location.hash;
+        if ((NotUpdateArray.length > 0) && (hash === '') && (page_state==='dashboard')) {
+          alert('Existen cambios en los estados de los alumnos que no han sido actualizados en el servidor, por favor espere hasta que se actualicen automáticamente cuando se restablezca la señal de internet.');
+          history.go(1); 
+        }
+      }
+    });
+  }
+};
+
+
 $(document).ready(function() {
       // $.mobile.loading( "show" );
     init();
@@ -74,7 +96,6 @@ $(document).ready(function() {
         getWayStop();
     });
 
-
     $('#btn-maps-modal').click(function(e){
         e.preventDefault();
         clearInterval(busLocationDemonId);
@@ -90,24 +111,25 @@ $(document).ready(function() {
         $("#det-parada-modal").dialog('close');
     });
 
-
     $('#btn-map-back').click(function (e){
         clearInterval(busLocationDemonId);
         deleteOverlays();   
         deleteOverlaysBus();   
     });
 
-
-
     $('#btn-close').click(function(e){
         e.preventDefault();
-
-        clearInterval(busLocationDemonId);
-        clearInterval(localizationDemonId);
-        clearInterval(verifyServiceDemonId);
-        clearInterval(updateLocationDemonId);    
-        password = '';
-        $("#show-login").trigger('click');
+        if ((NotUpdateArray.length > 0) && (page_state==='dashboard')) {
+            alert('Existen cambios en los estados de los alumnos que no han sido actualizados en el servidor, por favor espere hasta que se actualicen automáticamente cuando se restablezca la señal de internet.');
+        }else{
+            clearInterval(busLocationDemonId);
+            clearInterval(localizationDemonId);
+            clearInterval(verifyServiceDemonId);
+            clearInterval(updateLocationDemonId);    
+            password = '';
+            page_state  = 'do-login';
+            $("#show-login").trigger('click');
+        }
     });
     
 });
@@ -171,6 +193,7 @@ function login(id, key){
     }).done(function(response){
         
         if(response.state=='ok'){
+            page_state  = 'dashboard';
             $("#show-dashboard").trigger('click');
             user = response.data
             $('#agent-name').html(user.nombre+' : '+user.nombreruta);
