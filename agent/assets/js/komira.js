@@ -180,6 +180,7 @@ function login(id, key){
             $('#agent-photo').attr('src', "../assets/images/agents/" + user.foto) ;
             // ojoooo no se puede sacar clearInterval de este lado por que no se reinicia el logueo
             clearInterval(updateLocationDemonId);    
+            //localizame() debe ir siempre primero que UpdateLocation, por si no hay conexion a la red.
             localizame();
             localizationDemonId = setInterval(localizame, verification_interval);
 			
