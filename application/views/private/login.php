@@ -72,8 +72,14 @@
 			    </fieldset>
 			    <input type="hidden" name="action" value="do_login" />             
 			</form>  
+			<div class="centre"> 
+			Descarga aquí:
+				<a href="<?=base_url()?>/assets/download/BuskooRutas_Padres.apk"><img src="<?=base_url()?>assets/images/android.png" width="60" height="60" title="Aplicación para padres" /> </a>
+				<a href="<?=base_url()?>/assets/download/BuskooRutas_Agente.apk"><img src="<?=base_url()?>assets/images/android_bus.png" width="60" height="60" title="Aplicación para conductores" /> </a>
+			</div>
 
 		</div>
+
 	</div>
 
 </div>
